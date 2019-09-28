@@ -10,14 +10,15 @@ class NeuronType(Enum):
     MODULATION = 4
     
 class Neuron:
-    def __init__(self, neuron_type:NeuronType):
+    def __init__(self, neuron_type:NeuronType, innovation_id):
+        self.innovation_id = innovation_id
         self.neuron_type = neuron_type
         self.bias = random.uniform(BIAS_LOWER_LIMIT,BIAS_UPPER_LIMIT)
         self.activation = 0.0
 
 class Connetion:
-    def __init__(self, innovation_no, input_id, output_id):
-        self.innovation_no = innovation_no
+    def __init__(self, innovation_id, input_id, output_id):
+        self.innovation_id = innovation_id
         if(random.random < CONNECTION_VALID_RATE):
             self.is_valid = True
         else:
@@ -38,11 +39,11 @@ class NeuralNetwork:
             self.neurons.append(Neuron(NeuronType.MODULATION))
         for n in range(NORMAL_NUM_LOWER_LIMIT):
             self.neurons.append(Neuron(NeuronType.NORMAL))
+
         self.connections = []
 
     def get_output():
         pass
-
 
 class HebbianNetwork:
     pass
