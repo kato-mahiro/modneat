@@ -19,10 +19,7 @@ class Neuron:
 class Connetion:
     def __init__(self, innovation_id, input_id, output_id):
         self.innovation_id = innovation_id
-        if(random.random < CONNECTION_VALID_RATE):
-            self.is_valid = True
-        else:
-            self.is_valid = False
+        self.is_valid = True
         self.initial_weight = random.uniform(WEIGHT_LOWER_LIMIT,WEIGHT_UPPER_LIMIT)
         self.weight = initial_weight
         self.input_id = input_id
