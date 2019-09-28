@@ -27,6 +27,7 @@ class Connetion:
 
 class NeuralNetwork:
     def __init__(self,):
+        # initialize neurons
         self.neurons = []
         neuron_id = 0
         for n in range(INPUT_NUM):
@@ -42,7 +43,18 @@ class NeuralNetwork:
             self.neurons.append(Neuron(NeuronType.NORMAL,neuron_id))
             neuron_id += 1
 
+        # initialize connections
         self.connections = []
+        connection_id = 0
+        for n in range(CONNECTION_NUM_LOWER_LIMIT):
+            input_id = random.randint(0, self.neuron_num -1)
+            output_id = random.randint(INPUT_NUM, self.neuron_num -1)
+            self.connections.append(Connetion(connection_id, input_id, output_id ))
+            connection_id += 1
+
+    @property
+    def neuron_num(self):
+        return len(self.neurons)
 
     def get_output():
         pass
