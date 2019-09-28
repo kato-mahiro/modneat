@@ -26,6 +26,13 @@ class NeuralNetwork:
             self.connections.append(Connetion(connection_id, input_id, output_id ))
             connection_id += 1
 
+    @property
+    def output_vector(self):
+        output_vector = []
+        for n in range(INPUT_NUM, INPUT_NUM + OUTPUT_NUM):
+            output_vector.append(self.neurons[n].activation)
+        return output_vector
+
     def get_output(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')
@@ -44,11 +51,12 @@ class NeuralNetwork:
                         modulated_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
 
             if(self.neurons[n].neuron_type != NeuronType.MODULATION):
-                self.neurons[n].activation = math.tanh(activated_sum)
+                self.neurons[n].activation = math.tanh(activated_sum + self.neurons[n].bias)
             else:
-                self.neurons[n].modulation = math.tanh(activated_sum)
+                self.neurons[n].modulation = math.tanh(activated_sum + self.neurons[n].bias)
 
             # if Hebbian or ExHebbian, update weight using modulated_sum
+        return self.output_vector
 
 class HebbianNetwork:
     pass
