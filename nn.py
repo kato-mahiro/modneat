@@ -26,14 +26,10 @@ class NeuralNetwork:
         self.connections = []
         connection_id = 0
         for n in range(CONNECTION_NUM_LOWER_LIMIT):
-            input_id = random.randint(0, self.neuron_num -1)
-            output_id = random.randint(INPUT_NUM, self.neuron_num -1)
+            input_id = random.randint(0, len(self.neurons) -1)
+            output_id = random.randint(INPUT_NUM, len(self.neurons) -1)
             self.connections.append(Connetion(connection_id, input_id, output_id ))
             connection_id += 1
-
-    @property
-    def neuron_num(self):
-        return len(self.neurons)
 
     def get_output(input_vector):
         if(len(input_vector) != INPUT_NUM):
@@ -49,6 +45,6 @@ class ExHebbianNetwork:
 
 if __name__ == '__main__':
     n = NeuralNetwork()
-    for i in range(n.neuron_num):
+    for i in range(len(n.neurons)):
         print(n.neurons[i].activation)
         print(n.neurons[i].modulation)
