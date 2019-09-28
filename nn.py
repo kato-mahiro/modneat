@@ -35,13 +35,20 @@ class NeuralNetwork:
             self.neurons[n].activation = input_vector[n]
 
         for n in range(INPUT_NUM, len(self.neurons)):
-            activation_sum = 0
-            modulation_sum = 0
+            activated_sum = 0
+            modulated_sum = 0
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid):
                     if(self.connections[c].output_id == n):
-                        activation_sum += self.neurons[self.connections[c].input_id].activation * self.connections[c].weight
-                        modulation_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
+                        activated_sum += self.neurons[self.connections[c].input_id].activation * self.connections[c].weight
+                        modulated_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
+
+            if(self.neurons[n].neuron_type != NeuronType.MODULATION):
+                self.neurons[n].activation = math.tanh(activated_sum)
+            else:
+                self.neurons[n].modulation = math.tanh(activated_sum)
+
+            # if Hebbian or ExHebbian, update weight using modulated_sum
 
 class HebbianNetwork:
     pass
