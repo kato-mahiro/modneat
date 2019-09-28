@@ -31,11 +31,25 @@ class NeuralNetwork:
             self.connections.append(Connetion(connection_id, input_id, output_id ))
             connection_id += 1
 
-    def get_output(input_vector):
+    def get_output(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')
+
+        # Set input_vector
         for n in range(INPUT_NUM):
-            neurons[n].activation = input_vector[n]
+            self.neurons[n].activation = input_vector[n]
+
+        for n in range(INPUT_NUM, len(self.neurons)):
+            activation_sum = 0
+            modulation_sum = 0
+            for c in range(len(self.connections)):
+                if(self.connections[c].is_valid):
+                    if(self.connections[c].output_id == self.neurons[n].neuron_id):
+                        a = [x for x in self.neurons if x.neuron_id == self.connections[c].input_id][0].activation
+                        m = [x for x in self.neurons if x.neuron_id == self.connections[c].input_id][0].modulation
+                        print(a,m)
+                        activation_sum += a * self.connections[c].weight
+                        modulation_sum += m * self.connections[c].weight
 
 class HebbianNetwork:
     pass
