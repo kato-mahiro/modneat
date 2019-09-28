@@ -19,10 +19,7 @@ class Neuron:
 
     @property
     def activation(self):
-        if(self.neuron_type == NeuronType.MODULATION):
-            return 0.0
-        else:
-            return self.__activation
+        return self.__activation
 
     @activation.setter
     def activation(self,activation_val):
@@ -33,10 +30,7 @@ class Neuron:
 
     @property
     def modulation(self):
-        if(self.neuron_type == NeuronType.MODULATION):
-            return self.__modulation
-        else:
-            return 0.0
+        return self.__modulation
 
     @modulation.setter
     def modulation(self,modulation_val):
