@@ -10,32 +10,37 @@ class NeuronType(Enum):
     MODULATION = 4
     
 class Neuron:
-    def __init__(self, neuron_type:NeuronType, innovation_id):
-        self.innovation_id = innovation_id
+    def __init__(self, neuron_type:NeuronType, neuron_id):
+        self.neuron_id = neuron_id
         self.neuron_type = neuron_type
         self.bias = random.uniform(BIAS_LOWER_LIMIT,BIAS_UPPER_LIMIT)
         self.activation = 0.0
 
 class Connetion:
-    def __init__(self, innovation_id, input_id, output_id):
-        self.innovation_id = innovation_id
+    def __init__(self, connection_id, input_id, output_id):
+        self.connection_id = connection_id
         self.is_valid = True
-        self.initial_weight = random.uniform(WEIGHT_LOWER_LIMIT,WEIGHT_UPPER_LIMIT)
-        self.weight = initial_weight
+        self.weight = random.uniform(WEIGHT_LOWER_LIMIT,WEIGHT_UPPER_LIMIT)
+        self.initial_weight = self.weight
         self.input_id = input_id
         self.output_id = output_id
 
 class NeuralNetwork:
     def __init__(self,):
         self.neurons = []
+        neuron_id = 0
         for n in range(INPUT_NUM):
-            self.neurons.append(Neuron(NeuronType.INPUT))
+            self.neurons.append(Neuron(NeuronType.INPUT,neuron_id))
+            neuron_id += 1
         for n in range(OUTPUT_NUM):
-            self.neurons.append(Neuron(NeuronType.OUTPUT))
+            self.neurons.append(Neuron(NeuronType.OUTPUT,neuron_id))
+            neuron_id += 1
         for n in range(MODULATION_NUM_LOWER_LIMIT):
-            self.neurons.append(Neuron(NeuronType.MODULATION))
+            self.neurons.append(Neuron(NeuronType.MODULATION,neuron_id))
+            neuron_id += 1
         for n in range(NORMAL_NUM_LOWER_LIMIT):
-            self.neurons.append(Neuron(NeuronType.NORMAL))
+            self.neurons.append(Neuron(NeuronType.NORMAL,neuron_id))
+            neuron_id += 1
 
         self.connections = []
 
