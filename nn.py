@@ -56,8 +56,11 @@ class NeuralNetwork:
     def neuron_num(self):
         return len(self.neurons)
 
-    def get_output():
-        pass
+    def get_output(input_vector):
+        if(len(input_vector) != INPUT_NUM):
+            raise Exception('ERROR:num of input_vector is invalid')
+        for n in range(INPUT_NUM):
+            neurons[n].activation = input_vector[n]
 
 class HebbianNetwork:
     pass
