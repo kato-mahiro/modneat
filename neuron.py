@@ -10,8 +10,7 @@ class NeuronType(Enum):
     MODULATION = 4
     
 class Neuron:
-    def __init__(self, neuron_type:NeuronType, neuron_id):
-        self.neuron_id = neuron_id
+    def __init__(self, neuron_type:NeuronType):
         self.neuron_type = neuron_type
         self.bias = random.uniform(BIAS_LOWER_LIMIT,BIAS_UPPER_LIMIT)
         self.__activation = 0.0

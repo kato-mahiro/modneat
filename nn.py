@@ -8,19 +8,14 @@ class NeuralNetwork:
     def __init__(self,):
         # initialize neurons
         self.neurons = []
-        neuron_id = 0
         for n in range(INPUT_NUM):
-            self.neurons.append(Neuron(NeuronType.INPUT,neuron_id))
-            neuron_id += 1
+            self.neurons.append(Neuron(NeuronType.INPUT))
         for n in range(OUTPUT_NUM):
-            self.neurons.append(Neuron(NeuronType.OUTPUT,neuron_id))
-            neuron_id += 1
+            self.neurons.append(Neuron(NeuronType.OUTPUT))
         for n in range(MODULATION_NUM_LOWER_LIMIT):
-            self.neurons.append(Neuron(NeuronType.MODULATION,neuron_id))
-            neuron_id += 1
+            self.neurons.append(Neuron(NeuronType.MODULATION))
         for n in range(NORMAL_NUM_LOWER_LIMIT):
-            self.neurons.append(Neuron(NeuronType.NORMAL,neuron_id))
-            neuron_id += 1
+            self.neurons.append(Neuron(NeuronType.NORMAL))
 
         # initialize connections
         self.connections = []
@@ -44,12 +39,9 @@ class NeuralNetwork:
             modulation_sum = 0
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid):
-                    if(self.connections[c].output_id == self.neurons[n].neuron_id):
-                        a = [x for x in self.neurons if x.neuron_id == self.connections[c].input_id][0].activation
-                        m = [x for x in self.neurons if x.neuron_id == self.connections[c].input_id][0].modulation
-                        print(a,m)
-                        activation_sum += a * self.connections[c].weight
-                        modulation_sum += m * self.connections[c].weight
+                    if(self.connections[c].output_id == n):
+                        activation_sum += self.neurons[self.connections[c].input_id].activation * self.connections[c].weight
+                        modulation_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
 
 class HebbianNetwork:
     pass
@@ -62,3 +54,4 @@ if __name__ == '__main__':
     for i in range(len(n.neurons)):
         print(n.neurons[i].activation)
         print(n.neurons[i].modulation)
+    n.get_output([1,1])
