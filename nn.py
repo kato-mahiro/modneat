@@ -66,9 +66,12 @@ class NeuralNetwork:
 
         for n in range(len(self.neurons)):
             if(self.neurons[n].neuron_type == NeuronType.INPUT):
-                G.add_node(n, color='yellow',size=1.5)
+                string= str(n)+ ",10!"
+                print(string)
+                G.add_node(n, color='yellow',size=1.5, pos = string)
             elif(self.neurons[n].neuron_type == NeuronType.OUTPUT):
-                G.add_node(n, color='red',size=1.5)
+                string= str(n - INPUT_NUM)+ ",0!"
+                G.add_node(n, color='red',size=1.5, pos = string)
             elif(self.neurons[n].neuron_type == NeuronType.MODULATION):
                 G.add_node(n, color='blue',size=1.5)
             elif(self.neurons[n].neuron_type == NeuronType.NORMAL):
@@ -85,7 +88,7 @@ class NeuralNetwork:
 
         # グラフの描画
         #nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels)
-        nx.draw_networkx(G, pos, with_labels=True, alpha=0.5)
+        nx.draw_networkx(G, pos, with_labels=True, alpha=0.5, size=(10,10))
 
         # 表示
         #plt.axis("off")
