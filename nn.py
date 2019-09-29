@@ -84,15 +84,7 @@ class NeuralNetwork:
             G.add_edge(i,o,label=w)
 
         pos = nx.spring_layout(G,k=0.1)
-        #edge_labels = {(i, j): w['weight'] for i, j, w in G.edges(data=True)}
-
-        # グラフの描画
-        #nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels)
-        nx.draw_networkx(G, pos, with_labels=True, alpha=0.5, size=(10,10))
-
-        # 表示
-        #plt.axis("off")
-        #plt.show()
+        nx.draw_networkx(G, pos, with_labels=True, alpha=0.5, size=(10,100))
         nx.nx_agraph.view_pygraphviz(G,prog='fdp')
         
 class HebbianNetwork:
