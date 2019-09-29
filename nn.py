@@ -61,8 +61,19 @@ class NeuralNetwork:
         return self.output_vector
 
     def show_network(self):
+
         G=nx.MultiDiGraph()
-        node_colors = []
+
+        for n in range(len(self.neurons)):
+            if(self.neurons[n].neuron_type == NeuronType.INPUT):
+                G.add_node(n, color='yellow',size=1.5)
+            elif(self.neurons[n].neuron_type == NeuronType.OUTPUT):
+                G.add_node(n, color='red',size=1.5)
+            elif(self.neurons[n].neuron_type == NeuronType.MODULATION):
+                G.add_node(n, color='blue',size=1.5)
+            elif(self.neurons[n].neuron_type == NeuronType.NORMAL):
+                G.add_node(n, color='black',size=1.5)
+
         for c in range(len(self.connections)):
             i = self.connections[c].input_id
             o = self.connections[c].output_id
