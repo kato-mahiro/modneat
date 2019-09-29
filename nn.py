@@ -1,6 +1,7 @@
 import random
 import math
 import networkx as nx
+import matplotlib.pyplot as plt
 
 from const import *
 from neuron import *
@@ -60,13 +61,24 @@ class NeuralNetwork:
         return self.output_vector
 
     def show_network(self):
-        G=nx.DiGraph()
-        nodes_list = [i for i in range(len(self.neurons))]
-        G.add_nodes_from( nodes_list )
+        G=nx.MultiDiGraph()
+        node_colors = []
         for c in range(len(self.connections)):
             i = self.connections[c].input_id
             o = self.connections[c].output_id
-            G.add_edge(i,o)
+            w = round(self.connections[c].weight,2)
+            G.add_edge(i,o,label=w)
+
+        pos = nx.spring_layout(G,k=0.1)
+        #edge_labels = {(i, j): w['weight'] for i, j, w in G.edges(data=True)}
+
+        # グラフの描画
+        #nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels)
+        nx.draw_networkx(G, pos, with_labels=True, alpha=0.5)
+
+        # 表示
+        #plt.axis("off")
+        #plt.show()
         nx.nx_agraph.view_pygraphviz(G,prog='fdp')
         
 class HebbianNetwork:
