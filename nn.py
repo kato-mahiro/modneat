@@ -66,16 +66,19 @@ class NeuralNetwork:
 
         for n in range(len(self.neurons)):
             if(self.neurons[n].neuron_type == NeuronType.INPUT):
-                string= str(n)+ ",10!"
-                print(string)
-                G.add_node(n, color='yellow',size=1.5, pos = string)
+                pos_string= str(n*2)+ ",10!"
+                label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
+                G.add_node(n, color='yellow',size=1.5, pos = pos_string,label=label_string, font_size = 8)
             elif(self.neurons[n].neuron_type == NeuronType.OUTPUT):
-                string= str(n - INPUT_NUM)+ ",0!"
-                G.add_node(n, color='red',size=1.5, pos = string)
+                pos_string= str((n - INPUT_NUM) *2)+ ",0!"
+                label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
+                G.add_node(n, color='red',size=1.5, pos = pos_string, label=label_string, fot_size = 8)
             elif(self.neurons[n].neuron_type == NeuronType.MODULATION):
-                G.add_node(n, color='blue',size=1.5)
+                label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
+                G.add_node(n, color='blue',size=1.5,label=label_string, fot_size = 8)
             elif(self.neurons[n].neuron_type == NeuronType.NORMAL):
-                G.add_node(n, color='black',size=1.5)
+                label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
+                G.add_node(n, color='black',size=1.5,label=label_string, fot_size = 8)
 
         for c in range(len(self.connections)):
             i = self.connections[c].input_id
