@@ -1,5 +1,6 @@
 import random
 import math
+import networkx as nx
 
 from const import *
 from neuron import *
@@ -58,6 +59,16 @@ class NeuralNetwork:
             # if Hebbian or ExHebbian, update weight using modulated_sum
         return self.output_vector
 
+    def show_network(self):
+        G=nx.DiGraph()
+        nodes_list = [i for i in range(len(self.neurons))]
+        G.add_nodes_from( nodes_list )
+        for c in range(len(self.connections)):
+            i = self.connections[c].input_id
+            o = self.connections[c].output_id
+            G.add_edge(i,o)
+        nx.nx_agraph.view_pygraphviz(G,prog='fdp')
+        
 class HebbianNetwork:
     pass
 
@@ -66,7 +77,4 @@ class ExHebbianNetwork:
 
 if __name__ == '__main__':
     n = NeuralNetwork()
-    for i in range(len(n.neurons)):
-        print(n.neurons[i].activation)
-        print(n.neurons[i].modulation)
-    n.get_output([1,1])
+    n.show_network()
