@@ -35,6 +35,14 @@ class NeuralNetwork:
             output_vector.append(self.neurons[n].activation)
         return output_vector
 
+    @property
+    def max_connection_id(self):
+        maxid = 0
+        for i in range(len(self.connections)):
+            if(self.connections[i].connection_id > maxid):
+                maxid = self.connections[i].connection_id
+        return maxid
+
     def get_output(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')

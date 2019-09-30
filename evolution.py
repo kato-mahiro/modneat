@@ -63,7 +63,7 @@ def mutate_add_connection(a):
     agent = copy.deepcopy(a)
     input_id = random.randint(0, len(agent.neurons) -1)
     output_id = random.randint(INPUT_NUM, len(agent.neurons) -1)
-    connection_id = agent.connections[-1].connection_id + 1
+    connection_id = agent.max_connection_id + 1
     agent.connections.append(Connetion(connection_id, input_id, output_id ))
     return agent
 
