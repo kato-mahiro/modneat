@@ -39,19 +39,49 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
     for i in range(len(shorter.neurons), len(longer.neurons)):
         offspring.neurons.append( longer.neurons[i])
 
+    # evolution_param
+    if A.__class__.__name__ == 'ExHebbianNetwork':
+        if(fitness_A > fitness_B):
+            offspring.A = A.A
+            offspring.B = A.B
+            offspring.C = A.C
+            offspring.D = A.D
+        elif(fitness_B > fitness_A):
+            offspring.A = B.A
+            offspring.B = B.B
+            offspring.C = B.C
+            offspring.D = B.D
+        elif(fitness_A == fitness_B):
+            offspring.A = random.choice([A.A,B.A])
+            offspring.B = random.choice([A.B,B.B])
+            offspring.C = random.choice([A.C,B.C])
+            offspring.D = random.choice([A.D,B.D])
+
     return offspring
 
-def mutate(agent_A):
+def mutate_add_connection(a):
+    agent = copy.deepcopy(a)
+    input_id = random.randint(0, len(agent.neurons) -1)
+    output_id = random.randint(INPUT_NUM, len(agent.neurons) -1)
+    connection_id = agent.connections[-1].connection_id + 1
+    agent.connections.append(Connetion(connection_id, input_id, output_id ))
+    return agent
+
+def mutate_disable_connection(a):
+    pass
+
+def mutate_add_neuron(a):
     pass
 
 if __name__=='__main__':
-    a=NeuralNetwork()
-    a.show_network()
-    b=NeuralNetwork()
+    b=ExHebbianNetwork()
     b.show_network()
-    o1=crossover(a,0,b,0)
-    o2=crossover(a,0,b,0)
-    o3=crossover(o1,0,o2,0)
-    o1.show_network()
-    o2.show_network()
-    o3.show_network()
+    b=mutate_add_connection(b)
+    b=mutate_add_connection(b)
+    b.show_network()
+    #o1=crossover(a,0,b,0)
+    #o2=crossover(a,0,b,0)
+    #o3=crossover(o1,0,o2,0)
+    #o1.show_network()
+    #o2.show_network()
+    #o3.show_network()
