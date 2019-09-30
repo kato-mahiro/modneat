@@ -9,24 +9,18 @@ We use NEAT algorithm for evolution of neural network.
 
 # usage (concept)  
 ```python
-import modpy  
-agent = modpy.agent( #create agent
-  input_num = 10, 
-  output_num = 10, 
-  neuron_num = 10,
-  normal_num = 10,
-  modulatory_num = 10,
-  neuron_num_upper_limit = 100
-  neuron_num_lower_limit = 20
-  normal_num_upper_limit = 100
-  modulatory_num_upper_limit = 0
-  eta = 0.1
-  )
-#using agent
-output = agent.get_output([0,1,0,1,..0]) 
 
-#evolution
-new_agent = agentA.create_offspring(agentB)
+"""
+create agent and use
+"""
+import mod-neat
+agent = mod-neat.nn.NeuralNetwork()    # create agent
+output = agent.get_output( [1,0,1,0] ) # get output and update weight
+agent.show_network()                   # visualize neural network
 
+"""
+evolution agent
+"""
+next_agent = mod-neat.evolution.neat( agent_a, 0.1, agent_b, 0.2) # get next_generation using neat algorithm
 ```
 みたいな？
