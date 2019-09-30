@@ -47,10 +47,9 @@ class NeuralNetwork:
             activated_sum = 0
             modulated_sum = 0
             for c in range(len(self.connections)):
-                if(self.connections[c].is_valid):
-                    if(self.connections[c].output_id == n):
-                        activated_sum += self.neurons[self.connections[c].input_id].activation * self.connections[c].weight
-                        modulated_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
+                if(self.connections[c].is_valid and self.connections[c].output_id == n):
+                    activated_sum += self.neurons[self.connections[c].input_id].activation * self.connections[c].weight
+                    modulated_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
 
             if(self.neurons[n].neuron_type != NeuronType.MODULATION):
                 self.neurons[n].activation = math.tanh(activated_sum + self.neurons[n].bias)
