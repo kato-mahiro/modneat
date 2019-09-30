@@ -128,14 +128,59 @@ class HebbianNetwork(NeuralNetwork):
         return self.output_vector
 
 class ExHebbianNetwork(NeuralNetwork):
-    def __init__(self,A,B,C,D):
+    def __init__(self):
         super().__init__()
-        self.A = A
-        self.B = B
-        self.C = C
-        self.D = D
-        
+        self.A= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
+        self.B= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
+        self.C= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
+        self.D= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
 
+    def get_output(self,input_vector):
+        if(len(input_vector) != INPUT_NUM):
+            raise Exception('ERROR:num of input_vector is invalid')
+
+        # Set input_vector
+        for n in range(INPUT_NUM):
+            self.neurons[n].activation = input_vector[n]
+
+        for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
+            activated_sum = 0
+            modulated_sum = 0
+            for c in range(len(self.connections)):
+                if(self.connections[c].is_valid and self.connections[c].output_id == n):
+                    activated_sum += self.neurons[self.connections[c].input_id].activation * self.connections[c].weight
+                    modulated_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
+
+            if(self.neurons[n].neuron_type != NeuronType.MODULATION):
+                self.neurons[n].activation = math.tanh(activated_sum + self.neurons[n].bias)
+            else:
+                self.neurons[n].modulation = math.tanh(activated_sum + self.neurons[n].bias)
+
+            # if Hebbian or ExHebbian, update weight using modulated_sum
+            for c in range(len(self.connections)):
+                if(self.connections[c].is_valid and self.connections[c].output_id == n):
+                    if(modulated_sum == 0):
+                        self.connections[c].weight += \
+                            EPSIRON * \
+                            (
+                                self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation * self.A + \
+                                self.neurons[n].activation * self.B + \
+                                self.neurons[ self.connections[c].input_id ].activation * self.C + \
+                                self.D
+                            )
+                    elif(modulated_sum != 0):
+                        self.connections[c].weight += \
+                            modulated_sum * EPSIRON * \
+                            (
+                                self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation * self.A + \
+                                self.neurons[n].activation * self.B + \
+                                self.neurons[ self.connections[c].input_id ].activation * self.C + \
+                                self.D
+                            )
+                    self.connections[c].weight = WEIGHT_UPPER_LIMIT if (self.connections[c].weight > WEIGHT_UPPER_LIMIT) else self.connections[c].weight
+                    self.connections[c].weight = WEIGHT_LOWER_LIMIT if (self.connections[c].weight < WEIGHT_LOWER_LIMIT) else self.connections[c].weight
+
+        return self.output_vector
 if __name__ == '__main__':
     n = HebbianNetwork()
     n.show_network()
