@@ -59,6 +59,14 @@ class NeuralNetwork:
                 num += 1
         return num
 
+    @property
+    def num_of_active_connection(self):
+        num = 0
+        for i in range( len(self.connections) ):
+            if(self.connections[i].is_valid == True):
+                num += 1
+        return num
+
     def get_output(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')
