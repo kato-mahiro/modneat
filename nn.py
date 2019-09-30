@@ -66,7 +66,8 @@ class NeuralNetwork:
         for n in range(len(self.neurons)):
             if(self.neurons[n].neuron_type == NeuronType.INPUT):
                 pos_string= str(n*2)+ ",10!"
-                label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
+                #label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
+                label_string = str(n)
                 G.add_node(n, color='yellow',size=1.5, pos = pos_string,label=label_string, font_size = 8)
             elif(self.neurons[n].neuron_type == NeuronType.OUTPUT):
                 pos_string= str((n - INPUT_NUM) *2)+ ",0!"
@@ -80,10 +81,11 @@ class NeuralNetwork:
                 G.add_node(n, color='black',size=1.5,label=label_string, fot_size = 8)
 
         for c in range(len(self.connections)):
-            i = self.connections[c].input_id
-            o = self.connections[c].output_id
-            w = round(self.connections[c].weight,2)
-            G.add_edge(i,o,label=w)
+            if(self.connections[c].is_valid == True):
+                i = self.connections[c].input_id
+                o = self.connections[c].output_id
+                w = round(self.connections[c].weight,2)
+                G.add_edge(i,o,label=w)
 
         pos = nx.spring_layout(G,k=0.1)
         nx.draw_networkx(G, pos, with_labels=True, alpha=0.5, size=(10,100))
