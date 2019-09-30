@@ -75,7 +75,7 @@ class NeuralNetwork:
                 G.add_node(n, color='red',size=1.5, pos = pos_string, label=label_string, fot_size = 8)
             elif(self.neurons[n].neuron_type == NeuronType.MODULATION):
                 label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
-                G.add_node(n, color='blue',size=1.5,label=label_string, fot_size = 8)
+                G.add_node(n, color='blue',size=1.5,label=label_string, fot_size = 8, shape='d')
             elif(self.neurons[n].neuron_type == NeuronType.NORMAL):
                 label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
                 G.add_node(n, color='black',size=1.5,label=label_string, fot_size = 8)
