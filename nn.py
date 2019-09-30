@@ -122,6 +122,8 @@ class HebbianNetwork(NeuralNetwork):
                     elif(modulated_sum != 0):
                         self.connections[c].weight += \
                             modulated_sum * (EPSIRON * self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation)
+                    self.connections[c].weight = WEIGHT_UPPER_LIMIT if (self.connections[c].weight > WEIGHT_UPPER_LIMIT) else self.connections[c].weight
+                    self.connections[c].weight = WEIGHT_LOWER_LIMIT if (self.connections[c].weight < WEIGHT_LOWER_LIMIT) else self.connections[c].weight
 
         return self.output_vector
 
