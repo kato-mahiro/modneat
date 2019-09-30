@@ -7,7 +7,7 @@ from const import *
 from neuron import *
 
 class NeuralNetwork:
-    def __init__(self,):
+    def __init__(self):
         # initialize neurons
         self.neurons = []
         for n in range(INPUT_NUM):
@@ -127,8 +127,14 @@ class HebbianNetwork(NeuralNetwork):
 
         return self.output_vector
 
-class ExHebbianNetwork:
-    pass
+class ExHebbianNetwork(NeuralNetwork):
+    def __init__(self,A,B,C,D):
+        super().__init__()
+        self.A = A
+        self.B = B
+        self.C = C
+        self.D = D
+        
 
 if __name__ == '__main__':
     n = HebbianNetwork()
