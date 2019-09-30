@@ -21,6 +21,24 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
     A.connections = [x for x in A.connections if x != None]
     B.connections = [x for x in B.connections if x != None]
     print(len(A.connections),len(B.connections),len(offspring.connections))
+    if(fitness_A > fitness_B):
+        remaining_connections = A.connections
+    elif(fitness_B > fitness_A):
+        remaining_connections = B.connections
+    elif(fitness_A == fitness_B):
+        remaining_connections = A.connections + B.connections
+        remaining_connections = [x for x in remaining_connections if random.randint(0,1)]
+    offspring.connections += remaining_connections
+
+    # create neurons of offspring
+    longer = A if (len(A.neurons) > len(B.neurons) ) else B
+    shorter = B if (len(A.neurons) > len(B.neurons) ) else A
+    A_B_neurons = list(zip(A.neurons,B.neurons))
+    for i in range(len(A_B_neurons)):
+        offspring.neurons.append( random.choice(A_B_neurons[i] ) )
+    for i in range(len(shorter.neurons), len(longer.neurons)):
+        offspring.neurons.append( longer.neurons[i])
+
     return offspring
 
 def mutate(agent_A):
@@ -31,5 +49,9 @@ if __name__=='__main__':
     a.show_network()
     b=NeuralNetwork()
     b.show_network()
-    o=crossover(a,0,b,0)
-    o.show_network()
+    o1=crossover(a,0,b,0)
+    o2=crossover(a,0,b,0)
+    o3=crossover(o1,0,o2,0)
+    o1.show_network()
+    o2.show_network()
+    o3.show_network()
