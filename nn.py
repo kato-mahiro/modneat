@@ -91,12 +91,45 @@ class NeuralNetwork:
         nx.draw_networkx(G, pos, with_labels=True, alpha=0.5, size=(10,100))
         nx.nx_agraph.view_pygraphviz(G,prog='fdp')
         
-class HebbianNetwork:
-    pass
+class HebbianNetwork(NeuralNetwork):
+    def get_output(self,input_vector):
+        if(len(input_vector) != INPUT_NUM):
+            raise Exception('ERROR:num of input_vector is invalid')
+
+        # Set input_vector
+        for n in range(INPUT_NUM):
+            self.neurons[n].activation = input_vector[n]
+
+        for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
+            activated_sum = 0
+            modulated_sum = 0
+            for c in range(len(self.connections)):
+                if(self.connections[c].is_valid and self.connections[c].output_id == n):
+                    activated_sum += self.neurons[self.connections[c].input_id].activation * self.connections[c].weight
+                    modulated_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
+
+            if(self.neurons[n].neuron_type != NeuronType.MODULATION):
+                self.neurons[n].activation = math.tanh(activated_sum + self.neurons[n].bias)
+            else:
+                self.neurons[n].modulation = math.tanh(activated_sum + self.neurons[n].bias)
+
+            # if Hebbian or ExHebbian, update weight using modulated_sum
+            for c in range(len(self.connections)):
+                if(self.connections[c].is_valid and self.connections[c].output_id == n):
+                    if(modulated_sum == 0):
+                        self.connections[c].weight += \
+                            EPSIRON * self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation
+                    elif(modulated_sum != 0):
+                        self.connections[c].weight += \
+                            modulated_sum * (EPSIRON * self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation)
+
+        return self.output_vector
 
 class ExHebbianNetwork:
     pass
 
 if __name__ == '__main__':
-    n = NeuralNetwork()
+    n = HebbianNetwork()
+    n.show_network()
+    n.get_output([1,1])
     n.show_network()
