@@ -43,6 +43,22 @@ class NeuralNetwork:
                 maxid = self.connections[i].connection_id
         return maxid
 
+    @property
+    def num_of_normal_neuron(self):
+        num = 0
+        for i in range( INPUT_NUM + OUTPUT_NUM, len(self.neurons)):
+            if(self.neurons[i].neuron_type == NeuronType.NORMAL):
+                num += 1
+        return num
+    
+    @property
+    def num_of_modulation_neuron(self):
+        num = 0
+        for i in range( INPUT_NUM + OUTPUT_NUM, len(self.neurons)):
+            if(self.neurons[i].neuron_type == NeuronType.MODULATION):
+                num += 1
+        return num
+
     def get_output(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')
