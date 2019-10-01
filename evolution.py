@@ -78,13 +78,14 @@ def mutate_add_neuron(a):
     いじょうです
     """
     agent = copy.deepcopy(a)
-    target_no = random.randint(0, len(agent.connections))
+    target_no = random.randint(0, len(agent.connections) -1)
     target_input = agent.connections[target_no].input_id
     target_output = agent.connections[target_no].output_id
     print("ti:",target_input,"to:",target_output)
 
     normal_allowance = NORMAL_NUM_UPPER_LIMIT - agent.num_of_normal_neuron
     modulation_allowance = MODULATION_NUM_UPPER_LIMIT - agent.num_of_modulation_neuron
+    print("na:",normal_allowance,"ma",modulation_allowance)
     if (normal_allowance == 0 and modulation_allowance == 0):
         print("ニューロン追加しませーん")
         return agent
