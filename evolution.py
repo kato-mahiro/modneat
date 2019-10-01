@@ -68,7 +68,19 @@ def mutate_add_connection(a):
     return agent
 
 def mutate_disable_connection(a):
-    pass
+    """
+    なんか適当なコネクションを選んでとりあえず無効化する
+    """
+    agent = copy.deepcopy(a)
+    if(a.num_of_active_connection <= CONNECTION_NUM_LOWER_LIMIT):
+        return agent
+    else:
+        while(True):
+            n = random.randint(0, len(agent.connections) )
+            if agent.connections[n].is_valid == True:
+                agent.connections[n].is_valid = False
+                return agent
+
 
 def mutate_add_neuron(a):
     """
@@ -115,10 +127,17 @@ if __name__=='__main__':
     b.show_network()
     #b=mutate_add_connection(b)
     #b=mutate_add_connection(b)
-    b=mutate_add_neuron(b)
+    b=mutate_add_connection(b)
     b.show_network()
-    b=mutate_add_neuron(b)
+    b=mutate_add_connection(b)
     b.show_network()
+    b=mutate_disable_connection(b)
+    b.show_network()
+    b=mutate_disable_connection(b)
+    b.show_network()
+    b=mutate_disable_connection(b)
+    b.show_network()
+
     #o1=crossover(a,0,b,0)
     #o2=crossover(a,0,b,0)
     #o3=crossover(o1,0,o2,0)
