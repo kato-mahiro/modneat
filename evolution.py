@@ -4,6 +4,8 @@ from nn import *
 def crossover(agent_A, fitness_A, agent_B, fitness_B):
     A = copy.deepcopy(agent_A)
     B = copy.deepcopy(agent_B)
+    A.revert_to_initial_condition()
+    B.revert_to_initial_condition()
 
     offspring = copy.deepcopy(A)
     offspring.neurons = []
@@ -61,6 +63,7 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
 
 def mutate_add_connection(a):
     agent = copy.deepcopy(a)
+    agent.revert_to_initial_condition()
     if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
         return agent
     else:
@@ -75,6 +78,7 @@ def mutate_disable_connection(a):
     なんか適当なコネクションを選んでとりあえず無効化する
     """
     agent = copy.deepcopy(a)
+    agent.revert_to_initial_condition()
     if(agent.num_of_active_connection <= CONNECTION_NUM_LOWER_LIMIT):
         return agent
     else:
@@ -93,6 +97,7 @@ def mutate_add_neuron(a):
     いじょうです
     """
     agent = copy.deepcopy(a)
+    agent.revert_to_initial_condition()
     if(ageng.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
         return agent
     else:
