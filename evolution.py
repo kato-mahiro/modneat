@@ -75,7 +75,7 @@ def mutate_disable_connection(a):
     なんか適当なコネクションを選んでとりあえず無効化する
     """
     agent = copy.deepcopy(a)
-    if(a.num_of_active_connection <= CONNECTION_NUM_LOWER_LIMIT):
+    if(agent.num_of_active_connection <= CONNECTION_NUM_LOWER_LIMIT):
         return agent
     else:
         while(True):
@@ -93,36 +93,28 @@ def mutate_add_neuron(a):
     いじょうです
     """
     agent = copy.deepcopy(a)
-    target_no = random.randint(0, len(agent.connections) -1)
-    target_input = agent.connections[target_no].input_id
-    target_output = agent.connections[target_no].output_id
-    print("ti:",target_input,"to:",target_output)
-
-    normal_allowance = NORMAL_NUM_UPPER_LIMIT - agent.num_of_normal_neuron
-    modulation_allowance = MODULATION_NUM_UPPER_LIMIT - agent.num_of_modulation_neuron
-    print("na:",normal_allowance,"ma",modulation_allowance)
-    if (normal_allowance == 0 and modulation_allowance == 0):
-        print("ニューロン追加しませーん")
+    if(ageng.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
         return agent
+    else:
+        target_no = random.randint(0, len(agent.connections) -1)
+        target_input = agent.connections[target_no].input_id
+        target_output = agent.connections[target_no].output_id
 
-    t = random.choices(['n','m'],[normal_allowance,modulation_allowance])[0]
-    print("ニューロン追加しまーす")
-    if t=='n':
-        print(agent.num_of_normal_neuron,agent.num_of_modulation_neuron)
-        agent.neurons.append(Neuron(NeuronType.NORMAL))
-        print("ノーマル追加")
-        print(agent.num_of_normal_neuron,agent.num_of_modulation_neuron)
-    elif t=='m':
-        print(agent.num_of_normal_neuron,agent.num_of_modulation_neuron)
-        agent.neurons.append(Neuron(NeuronType.MODULATION))
-        print("mod追加")
-        print(agent.num_of_normal_neuron,agent.num_of_modulation_neuron)
+        normal_allowance = NORMAL_NUM_UPPER_LIMIT - agent.num_of_normal_neuron
+        modulation_allowance = MODULATION_NUM_UPPER_LIMIT - agent.num_of_modulation_neuron
+        if (normal_allowance == 0 and modulation_allowance == 0):
+            return agent
 
-    agent.connections[target_no].is_valid = False
-    print(len(agent.neurons),"個のニューロンがある")
-    agent.connections.append(Connetion( agent.max_connection_id+1, target_input, len(agent.neurons) -1) )
-    agent.connections.append(Connetion( agent.max_connection_id+1, len(agent.neurons) -1,target_output) )
-    return agent
+        t = random.choices(['n','m'],[normal_allowance,modulation_allowance])[0]
+        if t=='n':
+            agent.neurons.append(Neuron(NeuronType.NORMAL))
+        elif t=='m':
+            agent.neurons.append(Neuron(NeuronType.MODULATION))
+
+        agent.connections[target_no].is_valid = False
+        agent.connections.append(Connetion( agent.max_connection_id+1, target_input, len(agent.neurons) -1) )
+        agent.connections.append(Connetion( agent.max_connection_id+1, len(agent.neurons) -1,target_output) )
+        return agent
 
 
 if __name__=='__main__':
