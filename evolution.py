@@ -61,11 +61,14 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
 
 def mutate_add_connection(a):
     agent = copy.deepcopy(a)
-    input_id = random.randint(0, len(agent.neurons) -1)
-    output_id = random.randint(INPUT_NUM, len(agent.neurons) -1)
-    connection_id = agent.max_connection_id + 1
-    agent.connections.append(Connetion(connection_id, input_id, output_id ))
-    return agent
+    if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
+        return agent
+    else:
+        input_id = random.randint(0, len(agent.neurons) -1)
+        output_id = random.randint(INPUT_NUM, len(agent.neurons) -1)
+        connection_id = agent.max_connection_id + 1
+        agent.connections.append(Connetion(connection_id, input_id, output_id ))
+        return agent
 
 def mutate_disable_connection(a):
     """
