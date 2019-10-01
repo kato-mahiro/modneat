@@ -67,6 +67,15 @@ class NeuralNetwork:
                 num += 1
         return num
 
+    def revert_to_initial_condition(self):
+        for i in range(len(self.connections)):
+            self.connections[i].weight = self.connections[i].initial_weight
+        for i in range(len(self.connections)):
+            if(self.neurons[i].neuron_type != NeuronType.MODULATION):
+                self.neurons[i].activation = 0.0
+            else:
+                self.neurons[i].modulation = 0.0
+
     def get_output(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')
