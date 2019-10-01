@@ -71,13 +71,52 @@ def mutate_disable_connection(a):
     pass
 
 def mutate_add_neuron(a):
-    pass
+    """
+    1.なんか適当なコネクションを選んで無効化
+    2.適当なニューロンを作って追加
+    3. 2をつなぐためのコネクションを2つ作って追加
+    いじょうです
+    """
+    agent = copy.deepcopy(a)
+    target_no = random.randint(0, len(agent.connections))
+    target_input = agent.connections[target_no].input_id
+    target_output = agent.connections[target_no].output_id
+    print("ti:",target_input,"to:",target_output)
+
+    normal_allowance = NORMAL_NUM_UPPER_LIMIT - agent.num_of_normal_neuron
+    modulation_allowance = MODULATION_NUM_UPPER_LIMIT - agent.num_of_modulation_neuron
+    if (normal_allowance == 0 and modulation_allowance == 0):
+        print("ニューロン追加しませーん")
+        return agent
+
+    t = random.choices(['n','m'],[normal_allowance,modulation_allowance])[0]
+    print("ニューロン追加しまーす")
+    if t=='n':
+        print(agent.num_of_normal_neuron,agent.num_of_modulation_neuron)
+        agent.neurons.append(Neuron(NeuronType.NORMAL))
+        print("ノーマル追加")
+        print(agent.num_of_normal_neuron,agent.num_of_modulation_neuron)
+    elif t=='m':
+        print(agent.num_of_normal_neuron,agent.num_of_modulation_neuron)
+        agent.neurons.append(Neuron(NeuronType.MODULATION))
+        print("mod追加")
+        print(agent.num_of_normal_neuron,agent.num_of_modulation_neuron)
+
+    agent.connections[target_no].is_valid = False
+    print(len(agent.neurons),"個のニューロンがある")
+    agent.connections.append(Connetion( agent.max_connection_id+1, target_input, len(agent.neurons) -1) )
+    agent.connections.append(Connetion( agent.max_connection_id+1, len(agent.neurons) -1,target_output) )
+    return agent
+
 
 if __name__=='__main__':
     b=ExHebbianNetwork()
     b.show_network()
-    b=mutate_add_connection(b)
-    b=mutate_add_connection(b)
+    #b=mutate_add_connection(b)
+    #b=mutate_add_connection(b)
+    b=mutate_add_neuron(b)
+    b.show_network()
+    b=mutate_add_neuron(b)
     b.show_network()
     #o1=crossover(a,0,b,0)
     #o2=crossover(a,0,b,0)
