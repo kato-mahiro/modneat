@@ -14,10 +14,10 @@ class NeuralNetwork:
             self.neurons.append(Neuron(NeuronType.INPUT))
         for n in range(OUTPUT_NUM):
             self.neurons.append(Neuron(NeuronType.OUTPUT))
-        for n in range(MODULATION_NUM_LOWER_LIMIT):
-            self.neurons.append(Neuron(NeuronType.MODULATION))
         for n in range(NORMAL_NUM_LOWER_LIMIT):
             self.neurons.append(Neuron(NeuronType.NORMAL))
+        for n in range(MODULATION_NUM_LOWER_LIMIT):
+            self.neurons.append(Neuron(NeuronType.MODULATION))
 
         # initialize connections
         self.connections = []
