@@ -1,5 +1,9 @@
 import copy
-from nn import *
+
+try:
+    from . nn import *
+except:
+    from nn import *
 
 def crossover(agent_A, fitness_A, agent_B, fitness_B):
     A = copy.deepcopy(agent_A)

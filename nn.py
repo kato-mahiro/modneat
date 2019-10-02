@@ -3,8 +3,13 @@ import math
 import networkx as nx
 import matplotlib.pyplot as plt
 
-from const import *
-from neuron import *
+try:
+    from . const import *
+    from . neuron import *
+except:
+    from const import *
+    from neuron import *
+
 
 class NeuralNetwork:
     def __init__(self):

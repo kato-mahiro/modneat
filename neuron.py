@@ -1,7 +1,11 @@
 import random
 import math
 from enum import Enum
-from const import *
+
+try:
+    from . const import *
+except:
+    from const import *
 
 class NeuronType(Enum):
     INPUT = 1
