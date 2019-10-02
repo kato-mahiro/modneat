@@ -38,7 +38,10 @@ agent.show_network()                   # visualize neural network
 """
 Evolution of agents
 """
-next_agent = mod-neat.evolution.neat( agent_a, 0.1, agent_b, 0.2) # get next_generation using neat algorithm. 2nd and 4th argment represents each fitness.
+next_agent = modneat.evolution.crossover( agent_a, 0.1, agent_b, 0.2) # get next_generation using neat algorithm. 2nd and 4th argment represents each fitness.
+# about mutation
+agent = modneat.evolution.mutate_add_connection(agent)
+agent = modneat.evolution.mutate_disable_connection(agent)
+agent = modneat.evolution.mutate_add_neuron(agent)
 
 ```
-みたいな？
