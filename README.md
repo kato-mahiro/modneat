@@ -18,6 +18,9 @@ at your project folder...
 $ git clone https://github.com/katomasahiro10/modneat
 ```
 
+# configuration  
+To configuration, you edit file `./modneat/const.py`  
+
 # usage (concept)  
 ```python
 """
