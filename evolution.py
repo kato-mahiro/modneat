@@ -21,12 +21,10 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
                 offspring.connections.append(copy.deepcopy( random.choice([ A.connections[a],B.connections[b] ]) ) )
                 A.connections[a] = None
                 B.connections[b] = None
-                print("一致した")
                 break
     
     A.connections = [x for x in A.connections if x != None]
     B.connections = [x for x in B.connections if x != None]
-    print(len(A.connections),len(B.connections),len(offspring.connections))
     if(fitness_A > fitness_B):
         remaining_connections = A.connections
     elif(fitness_B > fitness_A):
