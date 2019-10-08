@@ -75,7 +75,7 @@ class NeuralNetwork:
     def revert_to_initial_condition(self):
         for i in range(len(self.connections)):
             self.connections[i].weight = self.connections[i].initial_weight
-        for i in range(len(self.connections)):
+        for i in range(len(self.neurons)):
             if(self.neurons[i].neuron_type != NeuronType.MODULATION):
                 self.neurons[i].activation = 0.0
             else:
