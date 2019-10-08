@@ -109,6 +109,8 @@ def mutate_add_neuron(a):
 
         normal_allowance = NORMAL_NUM_UPPER_LIMIT - agent.num_of_normal_neuron
         modulation_allowance = MODULATION_NUM_UPPER_LIMIT - agent.num_of_modulation_neuron
+        normal_allowance = 0 if normal_allowance < 0 else normal_allowance
+        modulation_allowance = 0 if modulation_allowance < 0 else modulation_allowance
         if (normal_allowance == 0 and modulation_allowance == 0):
             return agent
 
