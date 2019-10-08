@@ -102,7 +102,7 @@ def mutate_add_neuron(a):
     """
     agent = copy.deepcopy(a)
     agent.revert_to_initial_condition()
-    if(ageng.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
+    if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
         return agent
     else:
         target_no = random.randint(0, len(agent.connections) -1)
