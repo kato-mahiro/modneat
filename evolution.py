@@ -85,7 +85,7 @@ def mutate_disable_connection(a):
         return agent
     else:
         while(True):
-            n = random.randint(0, len(agent.connections) )
+            n = random.randint(0, len(agent.connections)-1 )
             if agent.connections[n].is_valid == True:
                 agent.connections[n].is_valid = False
                 return agent
