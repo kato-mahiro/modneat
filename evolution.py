@@ -100,30 +100,33 @@ def mutate_add_neuron(a):
     """
     agent = copy.deepcopy(a)
     agent.revert_to_initial_condition()
+
     if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
         return agent
-    else:
-        target_no = random.randint(0, len(agent.connections) -1)
-        target_input = agent.connections[target_no].input_id
-        target_output = agent.connections[target_no].output_id
-
-        normal_allowance = NORMAL_NUM_UPPER_LIMIT - agent.num_of_normal_neuron
-        modulation_allowance = MODULATION_NUM_UPPER_LIMIT - agent.num_of_modulation_neuron
-        normal_allowance = 0 if normal_allowance < 0 else normal_allowance
-        modulation_allowance = 0 if modulation_allowance < 0 else modulation_allowance
-        if (normal_allowance == 0 and modulation_allowance == 0):
-            return agent
-
-        t = random.choices(['n','m'],[normal_allowance,modulation_allowance])[0]
-        if t=='n':
-            agent.neurons.append(Neuron(NeuronType.NORMAL))
-        elif t=='m':
-            agent.neurons.append(Neuron(NeuronType.MODULATION))
-
-        agent.connections[target_no].is_valid = False
-        agent.connections.append(Connetion( agent.max_connection_id+1, target_input, len(agent.neurons) -1) )
-        agent.connections.append(Connetion( agent.max_connection_id+1, len(agent.neurons) -1,target_output) )
+    if(agent.num_of_normal_neuron + agent.num_of_modulation_neuron >= NEURON_NUM_UPPER_LIMIT):
         return agent
+
+    target_no = random.randint(0, len(agent.connections) -1)
+    target_input = agent.connections[target_no].input_id
+    target_output = agent.connections[target_no].output_id
+
+    normal_allowance = NORMAL_NUM_UPPER_LIMIT - agent.num_of_normal_neuron
+    modulation_allowance = MODULATION_NUM_UPPER_LIMIT - agent.num_of_modulation_neuron
+    normal_allowance = 0 if normal_allowance < 0 else normal_allowance
+    modulation_allowance = 0 if modulation_allowance < 0 else modulation_allowance
+    if (normal_allowance == 0 and modulation_allowance == 0):
+        return agent
+
+    t = random.choices(['n','m'],[normal_allowance,modulation_allowance])[0]
+    if t=='n':
+        agent.neurons.append(Neuron(NeuronType.NORMAL))
+    elif t=='m':
+        agent.neurons.append(Neuron(NeuronType.MODULATION))
+
+    agent.connections[target_no].is_valid = False
+    agent.connections.append(Connetion( agent.max_connection_id+1, target_input, len(agent.neurons) -1) )
+    agent.connections.append(Connetion( agent.max_connection_id+1, len(agent.neurons) -1,target_output) )
+    return agent
 
 
 if __name__=='__main__':
