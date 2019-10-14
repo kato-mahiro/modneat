@@ -10,7 +10,6 @@ except:
     from const import *
     from neuron import *
 
-
 class NeuralNetwork:
     def __init__(self):
         # initialize neurons
@@ -105,7 +104,7 @@ class NeuralNetwork:
             # if Hebbian or ExHebbian, update weight using modulated_sum
         return self.output_vector
 
-    def show_network(self):
+    def show_network(self, path=None):
 
         G=nx.MultiDiGraph()
 
@@ -135,7 +134,7 @@ class NeuralNetwork:
 
         pos = nx.spring_layout(G,k=0.1)
         nx.draw_networkx(G, pos, with_labels=True, alpha=0.5, size=(10,100))
-        nx.nx_agraph.view_pygraphviz(G,prog='fdp')
+        nx.nx_agraph.view_pygraphviz(G,prog='fdp',path=path)
         
 class HebbianNetwork(NeuralNetwork):
     def get_output(self,input_vector):
