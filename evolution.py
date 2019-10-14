@@ -127,7 +127,29 @@ def mutate_add_neuron(a):
     agent.connections.append(Connetion( agent.max_connection_id+1, target_input, len(agent.neurons) -1) )
     agent.connections.append(Connetion( agent.max_connection_id+1, len(agent.neurons) -1,target_output) )
     return agent
+    
+def give_dispersion(a, sigma = 0.1, rate = 0.1):
 
+    agent = copy.deepcopy(a)
+    agent.revert_to_initial_condition()
+
+    for i in range(len(agent.neurons)):
+        if random.random() < rate:
+            agent.neurons[i].bias += random.normalvariate(0, sigma)
+            if agent.neurons[i].bias < BIAS_LOWER_LIMIT:
+                agent.neurons[i].bias = BIAS_LOWER_LIMIT
+            elif agent.neurons[i].bias > BIAS_UPPER_LIMIT:
+                agent.neurons[i].bias = BIAS_UPPER_LIMIT
+
+    for i in range(len(agent.connections)):
+        if random.random() < rate:
+            agent.connections[i].weight += random.normalvariate(0, sigma)
+            if agent.connections[i].weight < WEIGHT_LOWER_LIMIT:
+                agent.connections[i].weight = WEIGHT_LOWER_LIMIT
+            elif agent.connections[i].weight > WEIGHT_UPPER_LIMIT:
+                agent.connections[i].weight = WEIGHT_UPPER_LIMIT
+
+    return agent
 
 if __name__=='__main__':
     b=ExHebbianNetwork()
