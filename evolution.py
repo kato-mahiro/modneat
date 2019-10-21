@@ -71,7 +71,7 @@ def mutate_add_connection(a):
     else:
         input_id = random.randint(0, len(agent.neurons) -1)
         output_id = random.randint(INPUT_NUM, len(agent.neurons) -1)
-        connection_id = agent.max_connection_id + 1
+        connection_id = agent.local_max_connection_id + 1
         agent.connections.append(Connetion(connection_id, input_id, output_id ))
         return agent
 
@@ -124,8 +124,8 @@ def mutate_add_neuron(a):
         agent.neurons.append(Neuron(NeuronType.MODULATION))
 
     agent.connections[target_no].is_valid = False
-    agent.connections.append(Connetion( agent.max_connection_id+1, target_input, len(agent.neurons) -1) )
-    agent.connections.append(Connetion( agent.max_connection_id+1, len(agent.neurons) -1,target_output) )
+    agent.connections.append(Connetion( agent.local_max_connection_id+1, target_input, len(agent.neurons) -1) )
+    agent.connections.append(Connetion( agent.local_max_connection_id+1, len(agent.neurons) -1,target_output) )
     return agent
     
 def give_dispersion(a, sigma = 0.1, rate = 0.1):

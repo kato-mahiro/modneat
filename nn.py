@@ -40,7 +40,7 @@ class NeuralNetwork:
         return output_vector
 
     @property
-    def max_connection_id(self):
+    def local_max_connection_id(self):
         maxid = 0
         for i in range(len(self.connections)):
             if(self.connections[i].connection_id > maxid):
