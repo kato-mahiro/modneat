@@ -11,7 +11,7 @@ except:
     from neuron import *
 
 class NeuralNetwork:
-    def __init__(self):
+    def __init__(self,global_max_connection_id = 0):
         # initialize neurons
         self.neurons = []
         for n in range(INPUT_NUM):
@@ -25,7 +25,7 @@ class NeuralNetwork:
 
         # initialize connections
         self.connections = []
-        connection_id = 0
+        connection_id = global_max_connection_id +1
         for n in range(CONNECTION_NUM_LOWER_LIMIT):
             input_id = random.randint(0, len(self.neurons) -1)
             output_id = random.randint(INPUT_NUM, len(self.neurons) -1)

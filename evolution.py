@@ -63,7 +63,7 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
 
     return offspring
 
-def mutate_add_connection(a):
+def mutate_add_connection(a, global_max_connection_id ):
     agent = copy.deepcopy(a)
     agent.revert_to_initial_condition()
     if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
@@ -71,7 +71,7 @@ def mutate_add_connection(a):
     else:
         input_id = random.randint(0, len(agent.neurons) -1)
         output_id = random.randint(INPUT_NUM, len(agent.neurons) -1)
-        connection_id = agent.local_max_connection_id + 1
+        connection_id = global_max_connection_id +1
         agent.connections.append(Connetion(connection_id, input_id, output_id ))
         return agent
 
@@ -91,7 +91,7 @@ def mutate_disable_connection(a):
                 return agent
 
 
-def mutate_add_neuron(a):
+def mutate_add_neuron(a, global_max_connection_id):
     """
     1.なんか適当なコネクションを選んで無効化
     2.適当なニューロンを作って追加
@@ -124,8 +124,8 @@ def mutate_add_neuron(a):
         agent.neurons.append(Neuron(NeuronType.MODULATION))
 
     agent.connections[target_no].is_valid = False
-    agent.connections.append(Connetion( agent.local_max_connection_id+1, target_input, len(agent.neurons) -1) )
-    agent.connections.append(Connetion( agent.local_max_connection_id+1, len(agent.neurons) -1,target_output) )
+    agent.connections.append(Connetion( global_max_connection_id +1, target_input, len(agent.neurons) -1) )
+    agent.connections.append(Connetion( global_max_connection_id +1, len(agent.neurons) -1,target_output) )
     return agent
     
 def give_dispersion(a, sigma = 0.1, rate = 0.1):
