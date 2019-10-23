@@ -26,6 +26,7 @@ class Agents(list):
         self.agent_num = agent_num
         for i in range(self.agent_num):
             #self.append(NeuralNetwork(self.global_max_connection_id))
+            print(self.global_max_connection_id)
             self.append(eval(agent_type_string)(self.global_max_connection_id))
 
     @property
@@ -40,18 +41,23 @@ class Agents(list):
 
     def evolution(self, elite_num = 0, mutate_prob=0.01):
         self.sort(key=attrgetter('fitness'), reverse = True)
-        fitness_list = [ self[i].fitness for i in range(len(self)) ]
+        fitness_list = [ self[i].fitness + 0.01 for i in range(len(self)) ]
 
-        next_agents = copy.deepcopy(self[0:elite_num])
+        #next_agents = Agents(copy.deepcopy(self[0:elite_num]))
+        next_agents = copy.deepcopy(self)
+        next_agents.clear()
+        for i in range(elite_num):
+            next_agents.append(self[i])
 
         # evolution
         for i in range(self.agent_num - elite_num):
+            larger = lambda a,b: a if a>b else b
             parent_A = random.choices(self, weights=fitness_list)[0]
             parent_B = random.choices(self, weights=fitness_list)[0]
             new_agent = crossover(parent_A, parent_A.fitness, parent_B, parent_B.fitness)
-            new_agent = mutate_add_connection(new_agent, self.global_max_connection_id) if random.random() < mutate_prob else new_agent
+            new_agent = mutate_add_connection(new_agent,larger(self.global_max_connection_id,next_agents.global_max_connection_id)) if random.random() < mutate_prob else new_agent
             new_agent = mutate_disable_connection(new_agent) if random.random() < mutate_prob else new_agent
-            new_agent = mutate_add_neuron(new_agent, self.global_max_connection_id) if random.random() < mutate_prob else new_agent
+            new_agent = mutate_add_neuron(new_agent, larger(self.global_max_connection_id, next_agents.global_max_connection_id)) if random.random() < mutate_prob else new_agent
             new_agent = give_dispersion(new_agent)
             next_agents.append(new_agent)
-        self = next_agents
+        return next_agents

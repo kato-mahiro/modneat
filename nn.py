@@ -132,7 +132,8 @@ class NeuralNetwork:
             if(self.connections[c].is_valid == True):
                 i = self.connections[c].input_id
                 o = self.connections[c].output_id
-                w = round(self.connections[c].weight,2)
+                #w = round(self.connections[c].weight,2)
+                w = self.connections[c].connection_id
                 G.add_edge(i,o,label=w)
 
         pos = nx.spring_layout(G,k=0.1)
