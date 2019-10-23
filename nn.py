@@ -32,6 +32,8 @@ class NeuralNetwork:
             self.connections.append(Connetion(connection_id, input_id, output_id ))
             connection_id += 1
 
+        self.fitness = 0.0
+
     @property
     def output_vector(self):
         output_vector = []
@@ -79,6 +81,7 @@ class NeuralNetwork:
                 self.neurons[i].activation = 0.0
             else:
                 self.neurons[i].modulation = 0.0
+        self.fitness = 0.0
 
     def get_output(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
