@@ -176,7 +176,7 @@ class HebbianNetwork(NeuralNetwork):
         return self.output_vector
 
 class ExHebbianNetwork(NeuralNetwork):
-    def __init__(self):
+    def __init__(self,global_max_connection_id = 0):
         super().__init__()
         self.A= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.B= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)

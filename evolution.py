@@ -1,8 +1,11 @@
 import copy
+import random
 
 try:
+    from . const import *
     from . nn import *
 except:
+    from const import *
     from nn import *
 
 def crossover(agent_A, fitness_A, agent_B, fitness_B):
