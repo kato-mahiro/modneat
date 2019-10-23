@@ -27,7 +27,6 @@ class Agents(list):
         for i in range(self.agent_num):
             #self.append(NeuralNetwork(self.global_max_connection_id))
             self.append(eval(agent_type_string)(self.global_max_connection_id))
-        print(type(self))
 
     @property
     def global_max_connection_id(self):
@@ -39,27 +38,20 @@ class Agents(list):
         elif len(self) > 0:
             return max(self, key=lambda x:x.local_max_connection_id).local_max_connection_id
 
-    def evolution(self):
-        print(type(self))
+    def evolution(self, elite_num = 0, mutate_prob=0.01):
         self.sort(key=attrgetter('fitness'), reverse = True)
-        print("1",type(self))
-        print(self)
         fitness_list = [ self[i].fitness for i in range(len(self)) ]
-        print("2",type(self))
 
-        next_agents = copy.deepcopy(self[0:ELITE_NUM])
-        print("3",type(self))
+        next_agents = copy.deepcopy(self[0:elite_num])
 
         # evolution
-        for i in range(AGENT_NUM - ELITE_NUM):
-            print("4",type(self))
+        for i in range(self.agent_num - elite_num):
             parent_A = random.choices(self, weights=fitness_list)[0]
             parent_B = random.choices(self, weights=fitness_list)[0]
             new_agent = crossover(parent_A, parent_A.fitness, parent_B, parent_B.fitness)
-            print(type(self))
-            new_agent = mutate_add_connection(new_agent, self.global_max_connection_id) if random.random() < MUTATE_PROB else new_agent
-            new_agent = mutate_disable_connection(new_agent) if random.random() < MUTATE_PROB else new_agent
-            new_agent = mutate_add_neuron(new_agent, self.global_max_connection_id) if random.random() < MUTATE_PROB else new_agent
+            new_agent = mutate_add_connection(new_agent, self.global_max_connection_id) if random.random() < mutate_prob else new_agent
+            new_agent = mutate_disable_connection(new_agent) if random.random() < mutate_prob else new_agent
+            new_agent = mutate_add_neuron(new_agent, self.global_max_connection_id) if random.random() < mutate_prob else new_agent
             new_agent = give_dispersion(new_agent)
             next_agents.append(new_agent)
         self = next_agents
