@@ -26,7 +26,7 @@ class Agents(list):
         self.agent_num = agent_num
         for i in range(self.agent_num):
             #self.append(NeuralNetwork(self.global_max_connection_id))
-            print(self.global_max_connection_id)
+            print('hoge:',self.global_max_connection_id)
             self.append(eval(agent_type_string)(self.global_max_connection_id))
 
     @property
@@ -64,3 +64,9 @@ class Agents(list):
 
         #引数で返すようにしないとなぜか内容が更新されない
         return next_agents
+
+if __name__=='__main__':
+    a = Agents('ExHebbianNetwork',10)
+    for i in range(10):
+        a[0].show_network()
+        a=a.evolution(elite_num=0,mutate_prob=0.1)
