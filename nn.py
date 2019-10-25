@@ -117,13 +117,16 @@ class NeuralNetwork:
 
         for n in range(len(self.neurons)):
             if(self.neurons[n].neuron_type == NeuronType.INPUT):
-                G.node( str(n), label='input'+str(n) )
+                G.node( str(n), label=str(n), style='filled', fillcolor='yellow')
             elif(self.neurons[n].neuron_type == NeuronType.OUTPUT):
-                G.node( str(n), label='output'+str(n) )
+                labelstring = str(n) + '\n' + str(round(self.neurons[n].bias,2))
+                G.node( str(n), label=labelstring, style='filled',fillcolor='turquoise' )
             elif(self.neurons[n].neuron_type == NeuronType.MODULATION):
-                G.node( str(n), label='modulation'+str(n), shape='square' )
+                labelstring = str(n) + '\n' + str(round(self.neurons[n].bias,2))
+                G.node( str(n), label=labelstring ,shape='square')
             elif(self.neurons[n].neuron_type == NeuronType.NORMAL):
-                G.node( str(n), label='normal'+str(n) )
+                labelstring = str(n) + '\n' + str(round(self.neurons[n].bias,2))
+                G.node( str(n), label=labelstring )
 
         edges = []
         edge_labels = []
