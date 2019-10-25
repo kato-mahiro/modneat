@@ -110,7 +110,7 @@ class NeuralNetwork:
             # if Hebbian or ExHebbian, update weight using modulated_sum
         return self.output_vector
 
-    def show_network(self, title=None):
+    def show_network(self, title="no_title"):
 
         G = Digraph(format='png')
 
