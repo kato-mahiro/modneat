@@ -6,12 +6,12 @@ import matplotlib.pyplot as plt
 from operator import attrgetter
 
 try:
-    from . const import *
+    from . modneat_const import *
     from . neuron import *
     from . nn import *
     from . evolution import *
 except:
-    from const import *
+    from modneat_const import *
     from neuron import *
     from nn import *
     from evolution import *

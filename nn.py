@@ -4,10 +4,10 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 try:
-    from . const import *
+    from . modneat_const import *
     from . neuron import *
 except:
-    from const import *
+    from modneat_const import *
     from neuron import *
 
 class NeuralNetwork:
