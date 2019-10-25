@@ -32,10 +32,10 @@ class NeuralNetwork:
             self.connections.append(Connetion(connection_id, input_id, output_id ))
             connection_id += 1
 
-        self.epsiron = random.uniform(0, EPSIRON_UPPER_LIMIT)
+        self.epsiron = random.uniform(EPSIRON_LOWER_LIMIT, EPSIRON_UPPER_LIMIT)
 
         self.fitness = 0.0
-
+EPSIRON_LOWER_LIMIT
     @property
     def output_vector(self):
         output_vector = []
