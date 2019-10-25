@@ -2,6 +2,7 @@ import random
 import math
 import networkx as nx
 import matplotlib.pyplot as plt
+from graphviz import Digraph
 
 try:
     from . modneat_const import *
@@ -111,36 +112,32 @@ class NeuralNetwork:
 
     def show_network(self, path=None):
 
-        G=nx.MultiDiGraph()
+        #G=nx.MultiDiGraph()
+        G = Digraph(format='png')
 
         for n in range(len(self.neurons)):
             if(self.neurons[n].neuron_type == NeuronType.INPUT):
-                pos_string= str(n*2)+ ",10!"
-                #label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
-                label_string = str(n)
-                G.add_node(n, color='yellow',size=1.5, pos = pos_string,label=label_string, font_size = 8)
+                G.node( str(n), label='input'+str(n) )
             elif(self.neurons[n].neuron_type == NeuronType.OUTPUT):
-                pos_string= str((n - INPUT_NUM) *2)+ ",0!"
-                label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
-                G.add_node(n, color='red',size=1.5, pos = pos_string, label=label_string, fot_size = 8)
+                G.node( str(n), label='output'+str(n) )
             elif(self.neurons[n].neuron_type == NeuronType.MODULATION):
-                label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
-                G.add_node(n, color='blue',size=1.5,label=label_string, fot_size = 8, shape='d')
+                G.node( str(n), label='modulation'+str(n), shape='square' )
             elif(self.neurons[n].neuron_type == NeuronType.NORMAL):
-                label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
-                G.add_node(n, color='black',size=1.5,label=label_string, fot_size = 8)
+                G.node( str(n), label='normal'+str(n) )
 
+        edges = []
+        edge_labels = []
         for c in range(len(self.connections)):
             if(self.connections[c].is_valid == True):
                 i = self.connections[c].input_id
                 o = self.connections[c].output_id
-                #w = round(self.connections[c].weight,2)
-                w = self.connections[c].connection_id
-                G.add_edge(i,o,label=w)
+                edges.append([i,o])
+                edge_labels.append(str(round(self.connections[c].weight,2)))
 
-        pos = nx.spring_layout(G,k=0.1)
-        nx.draw_networkx(G, pos, with_labels=True, alpha=0.5, size=(10,100))
-        nx.nx_agraph.view_pygraphviz(G,prog='fdp',path=path)
+        for i,e in enumerate(edges):
+            G.edge(str(e[0]),str(e[1]),label=edge_labels[i])
+
+        G.view()
         
 class HebbianNetwork(NeuralNetwork):
     def get_output(self,input_vector):
@@ -233,7 +230,7 @@ class ExHebbianNetwork(NeuralNetwork):
 
         return self.output_vector
 if __name__ == '__main__':
-    n = HebbianNetwork()
+    n = HebbianNetwork(0)
     n.show_network()
-    n.get_output([1,1])
+    #n.get_output([1,1])
     n.show_network()
