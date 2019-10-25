@@ -110,9 +110,8 @@ class NeuralNetwork:
             # if Hebbian or ExHebbian, update weight using modulated_sum
         return self.output_vector
 
-    def show_network(self, path=None):
+    def show_network(self, title=None):
 
-        #G=nx.MultiDiGraph()
         G = Digraph(format='png')
 
         for n in range(len(self.neurons)):
@@ -140,7 +139,7 @@ class NeuralNetwork:
         for i,e in enumerate(edges):
             G.edge(str(e[0]),str(e[1]),label=edge_labels[i])
 
-        G.view()
+        G.view(title)
         
 class HebbianNetwork(NeuralNetwork):
     def get_output(self,input_vector):
