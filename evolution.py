@@ -46,7 +46,14 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
     for i in range(len(shorter.neurons), len(longer.neurons)):
         offspring.neurons.append( longer.neurons[i])
 
-    # evolution_param
+    #その他のパラメータ (epsiron,A,B,C,Dの交叉)
+    if(fitness_A > fitness_B):
+        offspring.epsiron = A.epsiron
+    elif(fitness_B > fitness_A):
+        offspring.epsiron = B.epsiron
+    elif(fitness_A == fitness_B):
+        offspring.epsiron = random.choice([A.epsiron, B.epsi])
+
     if A.__class__.__name__ == 'ExHebbianNetwork':
         if(fitness_A > fitness_B):
             offspring.A = A.A
