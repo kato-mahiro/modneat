@@ -39,7 +39,7 @@ class Agents(list):
         elif len(self) > 0:
             return max(self, key=lambda x:x.local_max_connection_id).local_max_connection_id
 
-    def evolution(self, elite_num = 0, mutate_prob=0.01):
+    def evolution(self, elite_num = 0, mutate_prob=0.01, sigma=0.1):
         self.sort(key=attrgetter('fitness'), reverse = True)
         #全部のエージェントの適応度が0.0だと不具合が発生するため全てに0.01を追加
         fitness_list = [ self[i].fitness + 0.01 for i in range(len(self)) ]
@@ -59,7 +59,7 @@ class Agents(list):
             new_agent = mutate_add_connection(new_agent,larger(self.global_max_connection_id,next_agents.global_max_connection_id)) if random.random() < mutate_prob else new_agent
             new_agent = mutate_disable_connection(new_agent) if random.random() < mutate_prob else new_agent
             new_agent = mutate_add_neuron(new_agent, larger(self.global_max_connection_id, next_agents.global_max_connection_id)) if random.random() < mutate_prob else new_agent
-            new_agent = give_dispersion(new_agent)
+            new_agent = give_dispersion(new_agent, rate=mutate_prob, sigma=sigma)
             next_agents.append(new_agent)
 
         #引数で返すようにしないとなぜか内容が更新されない
@@ -69,4 +69,4 @@ if __name__=='__main__':
     a = Agents('ExHebbianNetwork',10)
     for i in range(10):
         a[0].show_network()
-        a=a.evolution(elite_num=0,mutate_prob=0.1)
+        a=a.evolution(elite_num=0,mutate_prob=0.01,sigma=0.1)

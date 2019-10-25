@@ -35,7 +35,7 @@ class NeuralNetwork:
         self.epsiron = random.uniform(EPSIRON_LOWER_LIMIT, EPSIRON_UPPER_LIMIT)
 
         self.fitness = 0.0
-EPSIRON_LOWER_LIMIT
+
     @property
     def output_vector(self):
         output_vector = []

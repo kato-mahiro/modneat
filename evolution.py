@@ -83,8 +83,6 @@ def mutate_add_connection(a, global_max_connection_id ):
         output_id = random.randint(INPUT_NUM, len(agent.neurons) -1)
         connection_id = global_max_connection_id +1
         agent.connections.append(Connetion(connection_id, input_id, output_id ))
-        print("新しいidのニューロンが追加されました")
-        print("idは",connection_id)
         return agent
 
 def mutate_disable_connection(a):
@@ -138,8 +136,6 @@ def mutate_add_neuron(a, global_max_connection_id):
     agent.connections[target_no].is_valid = False
     agent.connections.append(Connetion( global_max_connection_id +1, target_input, len(agent.neurons) -1) )
     agent.connections.append(Connetion( global_max_connection_id +2, len(agent.neurons) -1,target_output) )
-    print("新しいidのニューロンが追加されました")
-    print("idは",global_max_connection_id+1,"と",global_max_connection_id+2)
     return agent
     
 
