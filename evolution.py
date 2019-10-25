@@ -52,7 +52,7 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
     elif(fitness_B > fitness_A):
         offspring.epsiron = B.epsiron
     elif(fitness_A == fitness_B):
-        offspring.epsiron = random.choice([A.epsiron, B.epsi])
+        offspring.epsiron = random.choice([A.epsiron, B.epsiron])
 
     if A.__class__.__name__ == 'ExHebbianNetwork':
         if(fitness_A > fitness_B):
@@ -142,8 +142,12 @@ def mutate_add_neuron(a, global_max_connection_id):
     print("idは",global_max_connection_id+1,"と",global_max_connection_id+2)
     return agent
     
-def give_dispersion(a, sigma = 0.1, rate = 0.1):
 
+def give_dispersion(a, sigma = 0.1, rate = 0.1):
+    """
+    エージェントの各パラメータに確率 rateで 、平均0.0 分散sigmaの乱数を加える
+    範囲を超えたら範囲内に戻す
+    """
     agent = copy.deepcopy(a)
     agent.revert_to_initial_condition()
 
@@ -162,6 +166,29 @@ def give_dispersion(a, sigma = 0.1, rate = 0.1):
                 agent.connections[i].weight = WEIGHT_LOWER_LIMIT
             elif agent.connections[i].weight > WEIGHT_UPPER_LIMIT:
                 agent.connections[i].weight = WEIGHT_UPPER_LIMIT
+
+    if random.random() < rate:
+        agent.epsiron += random.normalvariate(0,sigma)
+        agent.epsiron = EPSIRON_LOWER_LIMIT if agent.epsiron < EPSIRON_LOWER_LIMIT else agent.epsiron
+        agent.epsiron = EPSIRON_UPPER_LIMIT if agent.epsiron > EPSIRON_UPPER_LIMIT else agent.epsiron
+
+    if agent.__class__.__name__ == 'ExHebbianNetwork':
+        if random.random() < rate:
+            agent.A += random.normalvariate(0,sigma)
+            agent.A = EVOLUTION_PARAM_LOWER_LIMIT if agent.A < EVOLUTION_PARAM_LOWER_LIMIT else agent.A
+            agent.A = EVOLUTION_PARAM_UPPER_LIMIT if agent.A > EVOLUTION_PARAM_UPPER_LIMIT else agent.A
+
+            agent.B += random.normalvariate(0,sigma)
+            agent.B = EVOLUTION_PARAM_LOWER_LIMIT if agent.B < EVOLUTION_PARAM_LOWER_LIMIT else agent.B
+            agent.B = EVOLUTION_PARAM_UPPER_LIMIT if agent.B > EVOLUTION_PARAM_UPPER_LIMIT else agent.B
+
+            agent.C += random.normalvariate(0,sigma)
+            agent.C = EVOLUTION_PARAM_LOWER_LIMIT if agent.C < EVOLUTION_PARAM_LOWER_LIMIT else agent.C
+            agent.C = EVOLUTION_PARAM_UPPER_LIMIT if agent.C > EVOLUTION_PARAM_UPPER_LIMIT else agent.C
+
+            agent.D += random.normalvariate(0,sigma)
+            agent.D = EVOLUTION_PARAM_LOWER_LIMIT if agent.D < EVOLUTION_PARAM_LOWER_LIMIT else agent.D
+            agent.D = EVOLUTION_PARAM_UPPER_LIMIT if agent.D > EVOLUTION_PARAM_UPPER_LIMIT else agent.D
 
     return agent
 
