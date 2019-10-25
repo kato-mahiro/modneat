@@ -35,7 +35,7 @@ class Agents(list):
         self中の各オブジェクトが持つ local_max_connection_id のうち最大のものを返す
         """
         if len(self) == 0:
-            return 0
+            return -1
         elif len(self) > 0:
             return max(self, key=lambda x:x.local_max_connection_id).local_max_connection_id
 
