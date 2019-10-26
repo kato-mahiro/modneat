@@ -86,7 +86,7 @@ class NeuralNetwork:
                 self.neurons[i].modulation = 0.0
         self.fitness = 0.0
 
-    def get_output(self,input_vector):
+    def get_output_without_update(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')
 
@@ -142,7 +142,7 @@ class NeuralNetwork:
         G.view(title)
         
 class HebbianNetwork(NeuralNetwork):
-    def get_output(self,input_vector):
+    def get_output_with_update(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')
 
@@ -185,7 +185,7 @@ class ExHebbianNetwork(NeuralNetwork):
         self.C= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.D= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
 
-    def get_output(self,input_vector):
+    def get_output_with_update(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')
 
