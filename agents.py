@@ -41,8 +41,14 @@ class Agents(list):
 
     def evolution(self, elite_num = 0, mutate_prob=0.01, sigma=0.1):
         self.sort(key=attrgetter('fitness'), reverse = True)
-        #全部のエージェントの適応度が0.0だと不具合が発生するため全てに0.01を追加
-        fitness_list = [ self[i].fitness + 0.01 for i in range(len(self)) ]
+
+        fitness_list = [ self[i].fitness for i in range(len(self)) ]
+
+        min_fitness = min(fitness_list)
+        max_fitness = max(fitness_list)
+        range_fitness = max_fitness - min_fitness +0.001
+
+        fitness_list = [(fitness_list[i] - min_fitness)/range_fitness +0.001 for i in range(len(fitness_list))]
 
         #next_agents = Agents(copy.deepcopy(self[0:elite_num]))
         next_agents = copy.deepcopy(self)
