@@ -153,10 +153,13 @@ class HebbianNetwork(NeuralNetwork):
         for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
             activated_sum = 0
             modulated_sum = 0
+            is_modulated = False
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid and self.connections[c].output_id == n):
                     activated_sum += self.neurons[self.connections[c].input_id].activation * self.connections[c].weight
                     modulated_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
+                    if(self.neurons[self.connections[c].input_id].neuron_type == NeuronType.MODULATION):
+                        is_modulated = True
 
             if(self.neurons[n].neuron_type != NeuronType.MODULATION):
                 self.neurons[n].activation = math.tanh(activated_sum + self.neurons[n].bias)
@@ -166,12 +169,13 @@ class HebbianNetwork(NeuralNetwork):
             # if Hebbian or ExHebbian, update weight using modulated_sum
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid and self.connections[c].output_id == n):
-                    if(modulated_sum == 0):
+                    if(is_modulated == False):
                         self.connections[c].weight += \
                             self.epsiron * self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation
-                    elif(modulated_sum != 0):
+                    elif(is_modulated == True):
                         self.connections[c].weight += \
                             modulated_sum * (self.epsiron * self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation)
+
                     self.connections[c].weight = WEIGHT_UPPER_LIMIT if (self.connections[c].weight > WEIGHT_UPPER_LIMIT) else self.connections[c].weight
                     self.connections[c].weight = WEIGHT_LOWER_LIMIT if (self.connections[c].weight < WEIGHT_LOWER_LIMIT) else self.connections[c].weight
 
@@ -196,10 +200,13 @@ class ExHebbianNetwork(NeuralNetwork):
         for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
             activated_sum = 0
             modulated_sum = 0
+            is_modulated = False
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid and self.connections[c].output_id == n):
                     activated_sum += self.neurons[self.connections[c].input_id].activation * self.connections[c].weight
                     modulated_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
+                    if(self.neurons[self.connections[c].input_id].neuron_type == NeuronType.MODULATION):
+                        is_modulated = True
 
             if(self.neurons[n].neuron_type != NeuronType.MODULATION):
                 self.neurons[n].activation = math.tanh(activated_sum + self.neurons[n].bias)
@@ -209,7 +216,7 @@ class ExHebbianNetwork(NeuralNetwork):
             # if Hebbian or ExHebbian, update weight using modulated_sum
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid and self.connections[c].output_id == n):
-                    if(modulated_sum == 0):
+                    if(is_modulated == False):
                         self.connections[c].weight += \
                             self.epsiron * \
                             (
@@ -218,7 +225,7 @@ class ExHebbianNetwork(NeuralNetwork):
                                 self.neurons[ self.connections[c].input_id ].activation * self.C + \
                                 self.D
                             )
-                    elif(modulated_sum != 0):
+                    elif(is_modulated == True):
                         self.connections[c].weight += \
                             modulated_sum * self.epsiron * \
                             (
@@ -227,6 +234,7 @@ class ExHebbianNetwork(NeuralNetwork):
                                 self.neurons[ self.connections[c].input_id ].activation * self.C + \
                                 self.D
                             )
+
                     self.connections[c].weight = WEIGHT_UPPER_LIMIT if (self.connections[c].weight > WEIGHT_UPPER_LIMIT) else self.connections[c].weight
                     self.connections[c].weight = WEIGHT_LOWER_LIMIT if (self.connections[c].weight < WEIGHT_LOWER_LIMIT) else self.connections[c].weight
 
