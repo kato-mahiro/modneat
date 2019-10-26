@@ -1,0 +1,22 @@
+#usage sample
+
+import agents
+
+inputs = [[0,0],[1,0],[0,1],[1,1]]
+outputs = [0,1,1,0]
+
+agents = agents.Agents('NeuralNetwork',10)
+
+for g in range(1000):
+    print('---')
+    ave =0.0
+    for n in range(10):
+        error = 0.0
+        error += (agents[n].get_output_without_update(inputs[0])[0] - outputs[0]) ** 2
+        error += (agents[n].get_output_without_update(inputs[1])[0] - outputs[1]) ** 2
+        error += (agents[n].get_output_without_update(inputs[2])[0] - outputs[2]) ** 2
+        error += (agents[n].get_output_without_update(inputs[3])[0] - outputs[3]) ** 2
+        agents[n].fitness = 10-error
+        ave += agents[n].fitness
+    agents.evolution(elite_num = 2, mutate_prob = 0.01, sigma = 0.1)
+    print('ave:',ave/10)

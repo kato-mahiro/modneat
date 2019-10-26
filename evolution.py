@@ -174,14 +174,17 @@ def give_dispersion(a, sigma = 0.1, rate = 0.1):
             agent.A = EVOLUTION_PARAM_LOWER_LIMIT if agent.A < EVOLUTION_PARAM_LOWER_LIMIT else agent.A
             agent.A = EVOLUTION_PARAM_UPPER_LIMIT if agent.A > EVOLUTION_PARAM_UPPER_LIMIT else agent.A
 
+        if random.random() < rate:
             agent.B += random.normalvariate(0,sigma)
             agent.B = EVOLUTION_PARAM_LOWER_LIMIT if agent.B < EVOLUTION_PARAM_LOWER_LIMIT else agent.B
             agent.B = EVOLUTION_PARAM_UPPER_LIMIT if agent.B > EVOLUTION_PARAM_UPPER_LIMIT else agent.B
 
+        if random.random() < rate:
             agent.C += random.normalvariate(0,sigma)
             agent.C = EVOLUTION_PARAM_LOWER_LIMIT if agent.C < EVOLUTION_PARAM_LOWER_LIMIT else agent.C
             agent.C = EVOLUTION_PARAM_UPPER_LIMIT if agent.C > EVOLUTION_PARAM_UPPER_LIMIT else agent.C
 
+        if random.random() < rate:
             agent.D += random.normalvariate(0,sigma)
             agent.D = EVOLUTION_PARAM_LOWER_LIMIT if agent.D < EVOLUTION_PARAM_LOWER_LIMIT else agent.D
             agent.D = EVOLUTION_PARAM_UPPER_LIMIT if agent.D > EVOLUTION_PARAM_UPPER_LIMIT else agent.D

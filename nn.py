@@ -94,6 +94,7 @@ class NeuralNetwork:
         for n in range(INPUT_NUM):
             self.neurons[n].activation = input_vector[n]
 
+
         for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
             activated_sum = 0
             modulated_sum = 0
