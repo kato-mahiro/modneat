@@ -1,6 +1,7 @@
 import copy
 import random
 import math
+import pickle
 import networkx as nx
 import matplotlib.pyplot as plt
 from operator import attrgetter
@@ -85,6 +86,15 @@ class Agents(list):
 
         #引数で返すようにしないとなぜか内容が更新されない
         return next_agents
+
+    def save_agents(self,name='undefined.pickle'):
+        f = open(name,'wb')
+        pickle.dump(self,f)
+        f.close
+
+def read_agents(name):
+    f = open(name,'rb')
+    return(pickle.load(f))
 
 if __name__=='__main__':
     a = Agents('ExHebbianNetwork',10)
