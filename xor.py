@@ -11,7 +11,7 @@ outputs = [0,1,1,0]
 # define populations
 a = agents.Agents('NeuralNetwork',10)
 
-# show individual
+# show first individual
 print(a[0].get_output_without_update(inputs[0]))
 print(a[0].get_output_without_update(inputs[1]))
 print(a[0].get_output_without_update(inputs[2]))
@@ -32,7 +32,7 @@ for g in range(5000):
     # evolution
     a = a.evolution(elite_num = 2, mutate_prob = 0.1, sigma = 0.1)
 
-# show last individual
+# show best individual
 print(a[0].get_output_without_update(inputs[0]))
 print(a[0].get_output_without_update(inputs[1]))
 print(a[0].get_output_without_update(inputs[2]))
