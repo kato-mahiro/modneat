@@ -7,12 +7,12 @@ import matplotlib.pyplot as plt
 from operator import attrgetter
 
 try:
-    from . modneat_const import *
+    from . modneat_settings import *
     from . neuron import *
     from . nn import *
     from . evolution import *
 except:
-    from modneat_const import *
+    from modneat_settings import *
     from neuron import *
     from nn import *
     from evolution import *

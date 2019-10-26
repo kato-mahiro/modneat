@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 from graphviz import Digraph
 
 try:
-    from . modneat_const import *
+    from . modneat_settings import *
     from . neuron import *
 except:
-    from modneat_const import *
+    from modneat_settings import *
     from neuron import *
 
 class NeuralNetwork:
