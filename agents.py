@@ -39,6 +39,21 @@ class Agents(list):
         elif len(self) > 0:
             return max(self, key=lambda x:x.local_max_connection_id).local_max_connection_id
 
+    @property
+    def max_fitness(self):
+        fitness_list = [ self[i].fitness for i in range(len(self)) ]
+        return max(fitness_list)
+
+    @property
+    def min_fitness(self):
+        fitness_list = [ self[i].fitness for i in range(len(self)) ]
+        return min(fitness_list)
+    
+    @property
+    def average_fitness(self):
+        fitness_list = [ self[i].fitness for i in range(len(self)) ]
+        return ( sum(fitness_list) / len(fitness_list) )
+
     def evolution(self, elite_num = 0, mutate_prob=0.01, sigma=0.1):
         self.sort(key=attrgetter('fitness'), reverse = True)
 
