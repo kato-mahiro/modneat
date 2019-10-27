@@ -33,20 +33,20 @@ agents = modneat_agents.Agents('HebbianNetwork',100)
 agents = modneat_agents.Agents('ExHebbianNetwork',100)
 
 # agents is list of agent.
-# In this case, a[0]~a[99] are each individual.
+# In this case, agents[0]~agents[99] are each individual.
 # Each individual has methods as follows.
-a[0].get_output([0,1]) # doesn't update their weight
-a[0].get_output_with_update([0,1]) # update their weight using Hebb's rule and modulation neurons
-a[0].show_network('save_file_path') 
+agents[0].get_output([0,1]) # doesn't update their weight
+agents[0].get_output_with_update([0,1]) # update their weight using Hebb's rule and modulation neurons
+agents[0].show_network('save_file_path') 
 
 # set fitness of each individual
-a[0].fitness = 0.1
+agents[0].fitness = 0.1
 
 # In addition, each individual has these instance variables
-a[0].epsiron  # learning rate
-a[0].A, a[0].B, a[0].C, a[0].D  # evolutionaly variables(only in 'ExHebbianNetwork' agent)
+agents[0].epsiron  # learning rate
+agents[0].A, agents[0].B, agents[0].C, agents[0].D  # evolutionaly variables(only in 'ExHebbianNetwork' agent)
 
-# Evolution using each fitness value.
+# Evolution following fitness value of each individual.
 agents = agents.evolution(elite_num = 4, mutate_prob = 0.05, sigma = 0.1)
 
 # Agents class has these properties
