@@ -19,7 +19,7 @@ $ git clone https://github.com/katomasahiro10/modneat
 ```
 
 # configuration  
-To configuration, please edit this file: `./modneat/modneat_settings`  
+To configure parameters of modneat, please edit this file: `./modneat/modneat_settings`  
 
 # usage (concept)  
 ```python
