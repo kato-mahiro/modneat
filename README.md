@@ -25,12 +25,12 @@ To configure parameters of modneat, please edit this file: `./modneat/modneat_se
 ```python
 
 # import package
-from modneat import modneat_agents
+from modneat import agents
 
 # create agents. give type and number of agents as argments.
-agents = modneat_agents.Agents('NeuralNetwork',100)
-agents = modneat_agents.Agents('HebbianNetwork',100)
-agents = modneat_agents.Agents('ExHebbianNetwork',100)
+agents = agents.Agents('NeuralNetwork',100)
+agents = agents.Agents('HebbianNetwork',100)
+agents = agents.Agents('ExHebbianNetwork',100)
 
 # agents is list of agent.
 # In this case, agents[0]~agents[99] are each individual.
