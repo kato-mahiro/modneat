@@ -136,9 +136,9 @@ class NeuralNetwork:
                 o = self.connections[c].output_id
                 edges.append([i,o])
                 if(self.connections[c].initial_weight - self.connections[c].weight != 0):
-                    edge_labels.append(str(self.connections[c].connection_id) + ' : ' + str(round(self.connections[c].weight,2)) + '\n (' + str(round(self.connections[c].initial_weight - self.connections[c].weight,2)) + ')')
+                    edge_labels.append(str(round(self.connections[c].weight,2)) + '\n (' + str(round(self.connections[c].initial_weight - self.connections[c].weight,2)) + ')')
                 else:
-                    edge_labels.append(str(self.connections[c].connection_id) + ' : ' + str(round(self.connections[c].weight,2)))
+                    edge_labels.append(str(round(self.connections[c].weight,2)))
 
         for i,e in enumerate(edges):
             G.edge(str(e[0]),str(e[1]),label=edge_labels[i])
