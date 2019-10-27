@@ -53,4 +53,6 @@ agents = agents.evolution(elite_num = 4, mutate_prob = 0.05, sigma = 0.1)
 agents.max_fitness
 agents.min_fitness
 agents.average_fitness
-```
+```  
+
+`/xor.py` shows more concrete example of using this package.
