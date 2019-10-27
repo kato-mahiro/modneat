@@ -2,17 +2,17 @@ import copy
 import random
 
 try:
-    from . const import *
+    from . modneat_settings import *
     from . nn import *
 except:
-    from const import *
+    from modneat_settings import *
     from nn import *
 
 def crossover(agent_A, fitness_A, agent_B, fitness_B):
     A = copy.deepcopy(agent_A)
     B = copy.deepcopy(agent_B)
-    A.revert_to_initial_condition()
-    B.revert_to_initial_condition()
+    A.reset()
+    B.reset()
 
     offspring = copy.deepcopy(A)
     offspring.neurons = []
@@ -46,7 +46,14 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
     for i in range(len(shorter.neurons), len(longer.neurons)):
         offspring.neurons.append( longer.neurons[i])
 
-    # evolution_param
+    #その他のパラメータ (epsiron,A,B,C,Dの交叉)
+    if(fitness_A > fitness_B):
+        offspring.epsiron = A.epsiron
+    elif(fitness_B > fitness_A):
+        offspring.epsiron = B.epsiron
+    elif(fitness_A == fitness_B):
+        offspring.epsiron = random.choice([A.epsiron, B.epsiron])
+
     if A.__class__.__name__ == 'ExHebbianNetwork':
         if(fitness_A > fitness_B):
             offspring.A = A.A
@@ -68,7 +75,7 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
 
 def mutate_add_connection(a, global_max_connection_id ):
     agent = copy.deepcopy(a)
-    agent.revert_to_initial_condition()
+    agent.reset()
     if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
         return agent
     else:
@@ -76,8 +83,6 @@ def mutate_add_connection(a, global_max_connection_id ):
         output_id = random.randint(INPUT_NUM, len(agent.neurons) -1)
         connection_id = global_max_connection_id +1
         agent.connections.append(Connetion(connection_id, input_id, output_id ))
-        print("新しいidのニューロンが追加されました")
-        print("idは",connection_id)
         return agent
 
 def mutate_disable_connection(a):
@@ -85,7 +90,7 @@ def mutate_disable_connection(a):
     なんか適当なコネクションを選んでとりあえず無効化する
     """
     agent = copy.deepcopy(a)
-    agent.revert_to_initial_condition()
+    agent.reset()
     if(agent.num_of_active_connection <= CONNECTION_NUM_LOWER_LIMIT):
         return agent
     else:
@@ -104,7 +109,7 @@ def mutate_add_neuron(a, global_max_connection_id):
     いじょうです
     """
     agent = copy.deepcopy(a)
-    agent.revert_to_initial_condition()
+    agent.reset()
 
     if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
         return agent
@@ -131,14 +136,16 @@ def mutate_add_neuron(a, global_max_connection_id):
     agent.connections[target_no].is_valid = False
     agent.connections.append(Connetion( global_max_connection_id +1, target_input, len(agent.neurons) -1) )
     agent.connections.append(Connetion( global_max_connection_id +2, len(agent.neurons) -1,target_output) )
-    print("新しいidのニューロンが追加されました")
-    print("idは",global_max_connection_id+1,"と",global_max_connection_id+2)
     return agent
     
-def give_dispersion(a, sigma = 0.1, rate = 0.1):
 
+def give_dispersion(a, sigma = 0.1, rate = 0.1):
+    """
+    エージェントの各パラメータに確率 rateで 、平均0.0 分散sigmaの乱数を加える
+    範囲を超えたら範囲内に戻す
+    """
     agent = copy.deepcopy(a)
-    agent.revert_to_initial_condition()
+    agent.reset()
 
     for i in range(len(agent.neurons)):
         if random.random() < rate:
@@ -155,6 +162,32 @@ def give_dispersion(a, sigma = 0.1, rate = 0.1):
                 agent.connections[i].weight = WEIGHT_LOWER_LIMIT
             elif agent.connections[i].weight > WEIGHT_UPPER_LIMIT:
                 agent.connections[i].weight = WEIGHT_UPPER_LIMIT
+
+    if random.random() < rate:
+        agent.epsiron += random.normalvariate(0,sigma)
+        agent.epsiron = EPSIRON_LOWER_LIMIT if agent.epsiron < EPSIRON_LOWER_LIMIT else agent.epsiron
+        agent.epsiron = EPSIRON_UPPER_LIMIT if agent.epsiron > EPSIRON_UPPER_LIMIT else agent.epsiron
+
+    if agent.__class__.__name__ == 'ExHebbianNetwork':
+        if random.random() < rate:
+            agent.A += random.normalvariate(0,sigma)
+            agent.A = EVOLUTION_PARAM_LOWER_LIMIT if agent.A < EVOLUTION_PARAM_LOWER_LIMIT else agent.A
+            agent.A = EVOLUTION_PARAM_UPPER_LIMIT if agent.A > EVOLUTION_PARAM_UPPER_LIMIT else agent.A
+
+        if random.random() < rate:
+            agent.B += random.normalvariate(0,sigma)
+            agent.B = EVOLUTION_PARAM_LOWER_LIMIT if agent.B < EVOLUTION_PARAM_LOWER_LIMIT else agent.B
+            agent.B = EVOLUTION_PARAM_UPPER_LIMIT if agent.B > EVOLUTION_PARAM_UPPER_LIMIT else agent.B
+
+        if random.random() < rate:
+            agent.C += random.normalvariate(0,sigma)
+            agent.C = EVOLUTION_PARAM_LOWER_LIMIT if agent.C < EVOLUTION_PARAM_LOWER_LIMIT else agent.C
+            agent.C = EVOLUTION_PARAM_UPPER_LIMIT if agent.C > EVOLUTION_PARAM_UPPER_LIMIT else agent.C
+
+        if random.random() < rate:
+            agent.D += random.normalvariate(0,sigma)
+            agent.D = EVOLUTION_PARAM_LOWER_LIMIT if agent.D < EVOLUTION_PARAM_LOWER_LIMIT else agent.D
+            agent.D = EVOLUTION_PARAM_UPPER_LIMIT if agent.D > EVOLUTION_PARAM_UPPER_LIMIT else agent.D
 
     return agent
 

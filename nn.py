@@ -2,16 +2,17 @@ import random
 import math
 import networkx as nx
 import matplotlib.pyplot as plt
+from graphviz import Digraph
 
 try:
-    from . const import *
+    from . modneat_settings import *
     from . neuron import *
 except:
-    from const import *
+    from modneat_settings import *
     from neuron import *
 
 class NeuralNetwork:
-    def __init__(self,global_max_connection_id = 0):
+    def __init__(self,global_max_connection_id):
         # initialize neurons
         self.neurons = []
         for n in range(INPUT_NUM):
@@ -31,6 +32,8 @@ class NeuralNetwork:
             output_id = random.randint(INPUT_NUM, len(self.neurons) -1)
             self.connections.append(Connetion(connection_id, input_id, output_id ))
             connection_id += 1
+
+        self.epsiron = random.uniform(EPSIRON_LOWER_LIMIT, EPSIRON_UPPER_LIMIT)
 
         self.fitness = 0.0
 
@@ -73,7 +76,7 @@ class NeuralNetwork:
                 num += 1
         return num
 
-    def revert_to_initial_condition(self):
+    def reset(self):
         for i in range(len(self.connections)):
             self.connections[i].weight = self.connections[i].initial_weight
         for i in range(len(self.neurons)):
@@ -91,6 +94,7 @@ class NeuralNetwork:
         for n in range(INPUT_NUM):
             self.neurons[n].activation = input_vector[n]
 
+
         for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
             activated_sum = 0
             modulated_sum = 0
@@ -107,41 +111,42 @@ class NeuralNetwork:
             # if Hebbian or ExHebbian, update weight using modulated_sum
         return self.output_vector
 
-    def show_network(self, path=None):
+    def show_network(self, title="no_title"):
 
-        G=nx.MultiDiGraph()
+        G = Digraph(format='png')
 
         for n in range(len(self.neurons)):
             if(self.neurons[n].neuron_type == NeuronType.INPUT):
-                pos_string= str(n*2)+ ",10!"
-                #label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
-                label_string = str(n)
-                G.add_node(n, color='yellow',size=1.5, pos = pos_string,label=label_string, font_size = 8)
+                G.node( str(n), label=str(n), style='filled', fillcolor='yellow')
             elif(self.neurons[n].neuron_type == NeuronType.OUTPUT):
-                pos_string= str((n - INPUT_NUM) *2)+ ",0!"
-                label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
-                G.add_node(n, color='red',size=1.5, pos = pos_string, label=label_string, fot_size = 8)
+                labelstring = str(n) + '\n' + str(round(self.neurons[n].bias,2))
+                G.node( str(n), label=labelstring, style='filled',fillcolor='turquoise' )
             elif(self.neurons[n].neuron_type == NeuronType.MODULATION):
-                label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
-                G.add_node(n, color='blue',size=1.5,label=label_string, fot_size = 8, shape='d')
+                labelstring = str(n) + '\n' + str(round(self.neurons[n].bias,2))
+                G.node( str(n), label=labelstring ,shape='square')
             elif(self.neurons[n].neuron_type == NeuronType.NORMAL):
-                label_string = str(n) + "\n" + str( round(self.neurons[n].bias,2))
-                G.add_node(n, color='black',size=1.5,label=label_string, fot_size = 8)
+                labelstring = str(n) + '\n' + str(round(self.neurons[n].bias,2))
+                G.node( str(n), label=labelstring )
 
+        edges = []
+        edge_labels = []
         for c in range(len(self.connections)):
             if(self.connections[c].is_valid == True):
                 i = self.connections[c].input_id
                 o = self.connections[c].output_id
-                #w = round(self.connections[c].weight,2)
-                w = self.connections[c].connection_id
-                G.add_edge(i,o,label=w)
+                edges.append([i,o])
+                if(self.connections[c].initial_weight - self.connections[c].weight != 0):
+                    edge_labels.append(str(round(self.connections[c].weight,2)) + '\n (' + str(round(self.connections[c].initial_weight - self.connections[c].weight,2)) + ')')
+                else:
+                    edge_labels.append(str(round(self.connections[c].weight,2)))
 
-        pos = nx.spring_layout(G,k=0.1)
-        nx.draw_networkx(G, pos, with_labels=True, alpha=0.5, size=(10,100))
-        nx.nx_agraph.view_pygraphviz(G,prog='fdp',path=path)
+        for i,e in enumerate(edges):
+            G.edge(str(e[0]),str(e[1]),label=edge_labels[i])
+
+        G.view(title)
         
 class HebbianNetwork(NeuralNetwork):
-    def get_output(self,input_vector):
+    def get_output_with_update(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')
 
@@ -152,10 +157,13 @@ class HebbianNetwork(NeuralNetwork):
         for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
             activated_sum = 0
             modulated_sum = 0
+            is_modulated = False
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid and self.connections[c].output_id == n):
                     activated_sum += self.neurons[self.connections[c].input_id].activation * self.connections[c].weight
                     modulated_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
+                    if(self.neurons[self.connections[c].input_id].neuron_type == NeuronType.MODULATION):
+                        is_modulated = True
 
             if(self.neurons[n].neuron_type != NeuronType.MODULATION):
                 self.neurons[n].activation = math.tanh(activated_sum + self.neurons[n].bias)
@@ -165,12 +173,13 @@ class HebbianNetwork(NeuralNetwork):
             # if Hebbian or ExHebbian, update weight using modulated_sum
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid and self.connections[c].output_id == n):
-                    if(modulated_sum == 0):
+                    if(is_modulated == False):
                         self.connections[c].weight += \
-                            EPSIRON * self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation
-                    elif(modulated_sum != 0):
+                            self.epsiron * self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation
+                    elif(is_modulated == True):
                         self.connections[c].weight += \
-                            modulated_sum * (EPSIRON * self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation)
+                            modulated_sum * (self.epsiron * self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation)
+
                     self.connections[c].weight = WEIGHT_UPPER_LIMIT if (self.connections[c].weight > WEIGHT_UPPER_LIMIT) else self.connections[c].weight
                     self.connections[c].weight = WEIGHT_LOWER_LIMIT if (self.connections[c].weight < WEIGHT_LOWER_LIMIT) else self.connections[c].weight
 
@@ -178,13 +187,13 @@ class HebbianNetwork(NeuralNetwork):
 
 class ExHebbianNetwork(NeuralNetwork):
     def __init__(self,global_max_connection_id = 0):
-        super().__init__()
+        super().__init__(global_max_connection_id)
         self.A= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.B= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.C= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.D= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
 
-    def get_output(self,input_vector):
+    def get_output_with_update(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')
 
@@ -195,10 +204,13 @@ class ExHebbianNetwork(NeuralNetwork):
         for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
             activated_sum = 0
             modulated_sum = 0
+            is_modulated = False
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid and self.connections[c].output_id == n):
                     activated_sum += self.neurons[self.connections[c].input_id].activation * self.connections[c].weight
                     modulated_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
+                    if(self.neurons[self.connections[c].input_id].neuron_type == NeuronType.MODULATION):
+                        is_modulated = True
 
             if(self.neurons[n].neuron_type != NeuronType.MODULATION):
                 self.neurons[n].activation = math.tanh(activated_sum + self.neurons[n].bias)
@@ -208,30 +220,31 @@ class ExHebbianNetwork(NeuralNetwork):
             # if Hebbian or ExHebbian, update weight using modulated_sum
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid and self.connections[c].output_id == n):
-                    if(modulated_sum == 0):
+                    if(is_modulated == False):
                         self.connections[c].weight += \
-                            EPSIRON * \
+                            self.epsiron * \
                             (
                                 self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation * self.A + \
                                 self.neurons[n].activation * self.B + \
                                 self.neurons[ self.connections[c].input_id ].activation * self.C + \
                                 self.D
                             )
-                    elif(modulated_sum != 0):
+                    elif(is_modulated == True):
                         self.connections[c].weight += \
-                            modulated_sum * EPSIRON * \
+                            modulated_sum * self.epsiron * \
                             (
                                 self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation * self.A + \
                                 self.neurons[n].activation * self.B + \
                                 self.neurons[ self.connections[c].input_id ].activation * self.C + \
                                 self.D
                             )
+
                     self.connections[c].weight = WEIGHT_UPPER_LIMIT if (self.connections[c].weight > WEIGHT_UPPER_LIMIT) else self.connections[c].weight
                     self.connections[c].weight = WEIGHT_LOWER_LIMIT if (self.connections[c].weight < WEIGHT_LOWER_LIMIT) else self.connections[c].weight
 
         return self.output_vector
 if __name__ == '__main__':
-    n = HebbianNetwork()
+    n = HebbianNetwork(0)
     n.show_network()
-    n.get_output([1,1])
+    #n.get_output([1,1])
     n.show_network()

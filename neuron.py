@@ -3,9 +3,9 @@ import math
 from enum import Enum
 
 try:
-    from . const import *
+    from . modneat_settings import *
 except:
-    from const import *
+    from modneat_settings import *
 
 class NeuronType(Enum):
     INPUT = 1
