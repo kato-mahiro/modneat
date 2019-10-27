@@ -9,7 +9,7 @@ inputs = [[0,0],[1,0],[0,1],[1,1]]
 outputs = [0,1,1,0]
 
 # define populations
-a = agents.Agents('NeuralNetwork',10)
+a = modneat_agents.Agents('NeuralNetwork',10)
 
 # show first individual
 print(a[0].get_output(inputs[0]))
