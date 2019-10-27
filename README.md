@@ -13,38 +13,22 @@ We use NEAT algorithm for evolution of neural network.
 - pygraphviz  
 
 # install  
-at your project folder...
+on the your project folder...
 ```
 $ git clone https://github.com/katomasahiro10/modneat
 ```
 
 # configuration  
-To configuration, please edit this file: `./modneat/const.py`  
+To configuration, please edit this file: `./modneat/modneat_settings`  
 
 # usage (concept)  
 ```python
-"""
-import package
-"""
-import modneat
 
-"""
-Create agent and use it
-"""
-agent = modneat.nn.NeuralNetwork()    # create agent which doesn't learn
-agent = modneat.nn.HebbianNetwork()   # which learn by Hebb's rule
-agent = modneat.nn.ExHebbianNetwork() # which learn by Expanded Hebb's rule
+# import package
+from modneat import modneat_agents
 
-output = agent.get_output( [1,0,1,0] ) # get output and update weight
-agent.show_network()                   # visualize neural network
-
-"""
-Evolution of agents
-"""
-next_agent = modneat.evolution.crossover( agent_a, 0.1, agent_b, 0.2) # get next_generation using neat algorithm. 2nd and 4th argment represents each fitness.
-# about mutation
-agent = modneat.evolution.mutate_add_connection(agent)
-agent = modneat.evolution.mutate_disable_connection(agent)
-agent = modneat.evolution.mutate_add_neuron(agent)
-
+# create agents
+agents = modneat_agents.Agents('NeuralNetwork',100)
+agents = modneat_agents.Agents('HebbianNetwork',100)
+agents = modneat_agents.Agents('ExHebbianNetwork',100)
 ```
