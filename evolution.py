@@ -11,8 +11,8 @@ except:
 def crossover(agent_A, fitness_A, agent_B, fitness_B):
     A = copy.deepcopy(agent_A)
     B = copy.deepcopy(agent_B)
-    A.revert_to_initial_condition()
-    B.revert_to_initial_condition()
+    A.reset()
+    B.reset()
 
     offspring = copy.deepcopy(A)
     offspring.neurons = []
@@ -75,7 +75,7 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
 
 def mutate_add_connection(a, global_max_connection_id ):
     agent = copy.deepcopy(a)
-    agent.revert_to_initial_condition()
+    agent.reset()
     if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
         return agent
     else:
@@ -90,7 +90,7 @@ def mutate_disable_connection(a):
     なんか適当なコネクションを選んでとりあえず無効化する
     """
     agent = copy.deepcopy(a)
-    agent.revert_to_initial_condition()
+    agent.reset()
     if(agent.num_of_active_connection <= CONNECTION_NUM_LOWER_LIMIT):
         return agent
     else:
@@ -109,7 +109,7 @@ def mutate_add_neuron(a, global_max_connection_id):
     いじょうです
     """
     agent = copy.deepcopy(a)
-    agent.revert_to_initial_condition()
+    agent.reset()
 
     if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
         return agent
@@ -145,7 +145,7 @@ def give_dispersion(a, sigma = 0.1, rate = 0.1):
     範囲を超えたら範囲内に戻す
     """
     agent = copy.deepcopy(a)
-    agent.revert_to_initial_condition()
+    agent.reset()
 
     for i in range(len(agent.neurons)):
         if random.random() < rate:
