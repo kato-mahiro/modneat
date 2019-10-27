@@ -69,6 +69,7 @@ class Agents(list):
         next_agents = copy.deepcopy(self)
         next_agents.clear()
         for i in range(elite_num):
+            self.[i].reset()
             next_agents.append(self[i])
 
         # evolution
