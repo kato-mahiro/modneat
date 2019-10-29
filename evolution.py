@@ -163,6 +163,8 @@ def give_dispersion(a, sigma = 0.1, rate = 0.1):
             elif agent.connections[i].weight > WEIGHT_UPPER_LIMIT:
                 agent.connections[i].weight = WEIGHT_UPPER_LIMIT
 
+            agent.connections[i].initial_weight = agent.connections[i].weight
+
     if random.random() < rate:
         agent.epsiron += random.normalvariate(0,sigma)
         agent.epsiron = EPSIRON_LOWER_LIMIT if agent.epsiron < EPSIRON_LOWER_LIMIT else agent.epsiron
