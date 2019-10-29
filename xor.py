@@ -2,7 +2,7 @@
 
 import random
 
-import agents
+from modneat import agents
 
 # target inputs and outputs
 inputs = [[0,0],[1,0],[0,1],[1,1]]
