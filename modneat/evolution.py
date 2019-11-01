@@ -115,6 +115,8 @@ def mutate_add_neuron(a, global_max_connection_id):
         return agent
     if(agent.num_of_normal_neuron + agent.num_of_modulation_neuron >= NEURON_NUM_UPPER_LIMIT):
         return agent
+    if( len(agent.connections) == 0 ):
+        return agent
 
     target_no = random.randint(0, len(agent.connections) -1)
     target_input = agent.connections[target_no].input_id
