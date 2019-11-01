@@ -15,7 +15,7 @@ We use NEAT algorithm for evolution of neural network.
 # install  
 on the your project folder...
 ```
-$ git clone https://github.com/katomasahiro10/modneat/modneat
+$ git clone https://github.com/katomasahiro10/modneat
 ```
 
 # configuration  
