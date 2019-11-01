@@ -111,6 +111,43 @@ class NeuralNetwork:
             # if Hebbian or ExHebbian, update weight using modulated_sum
         return self.output_vector
 
+    def get_output_dry_run(self,input_vector):
+        """
+        出力ベクトルを得る
+        重みを更新しない
+        出力値・修飾値は0に戻る
+        """
+        if(len(input_vector) != INPUT_NUM):
+            raise Exception('ERROR:num of input_vector is invalid')
+
+        # Set input_vector
+        for n in range(INPUT_NUM):
+            self.neurons[n].activation = input_vector[n]
+
+
+        for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
+            activated_sum = 0
+            modulated_sum = 0
+            for c in range(len(self.connections)):
+                if(self.connections[c].is_valid and self.connections[c].output_id == n):
+                    activated_sum += self.neurons[self.connections[c].input_id].activation * self.connections[c].weight
+                    modulated_sum += self.neurons[self.connections[c].input_id].modulation * self.connections[c].weight
+
+            if(self.neurons[n].neuron_type != NeuronType.MODULATION):
+                self.neurons[n].activation = math.tanh(activated_sum + self.neurons[n].bias)
+            else:
+                self.neurons[n].modulation = math.tanh(activated_sum + self.neurons[n].bias)
+
+        tmp_output_vector = self.output_vector
+
+        for i in range(len(self.neurons)):
+            if(self.neurons[i].neuron_type != NeuronType.MODULATION):
+                self.neurons[i].activation = 0.0
+            else:
+                self.neurons[i].modulation = 0.0
+
+        return tmp_output_vector
+
     def show_network(self, title="no_title"):
 
         G = Digraph(format='png')
