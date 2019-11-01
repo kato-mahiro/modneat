@@ -35,7 +35,7 @@ agents = agents.Agents('ExHebbianNetwork',100)
 # agents is list of agent.
 # In this case, agents[0]~agents[99] are each individual.
 # Each individual has methods as follows.
-agents[0].get_output([0,1]) # doesn't update their weight
+agents[0].get_output_without_update([0,1]) # doesn't update their weight
 agents[0].get_output_with_update([0,1]) # update their weight using Hebb's rule and modulation neurons
 agents[0].show_network('save_file_path') 
 

@@ -86,7 +86,7 @@ class NeuralNetwork:
                 self.neurons[i].modulation = 0.0
         self.fitness = 0.0
 
-    def get_output(self,input_vector):
+    def get_output_without_update(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')
 
