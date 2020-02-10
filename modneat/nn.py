@@ -12,7 +12,9 @@ except:
     from neuron import *
 
 class NeuralNetwork:
-    def __init__(self,global_max_connection_id):
+    def __init__(self,global_max_connection_id,is_automatic_change):
+        self.is_automatic_change = is_automatic_change
+
         # initialize neurons
         self.neurons = []
         for n in range(INPUT_NUM):
@@ -183,6 +185,7 @@ class NeuralNetwork:
         G.view(title)
         
 class HebbianNetwork(NeuralNetwork):
+
     def get_output_with_update(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
             raise Exception('ERROR:num of input_vector is invalid')
@@ -210,9 +213,11 @@ class HebbianNetwork(NeuralNetwork):
             # if Hebbian or ExHebbian, update weight using modulated_sum
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid and self.connections[c].output_id == n):
-                    if(is_modulated == False):
+                    if(is_modulated == False and self.is_automatic_change == True):
                         self.connections[c].weight += \
                             self.epsiron * self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation
+                    elif(is_modulated == False and self.is_automatic_change == False):
+                        self.connections[c].weight += 0
                     elif(is_modulated == True):
                         self.connections[c].weight += \
                             modulated_sum * (self.epsiron * self.neurons[n].activation * self.neurons[ self.connections[c].input_id ].activation)
@@ -223,8 +228,8 @@ class HebbianNetwork(NeuralNetwork):
         return self.output_vector
 
 class ExHebbianNetwork(NeuralNetwork):
-    def __init__(self,global_max_connection_id = 0):
-        super().__init__(global_max_connection_id)
+    def __init__(self,global_max_connection_id,is_automatic_change):
+        super().__init__(global_max_connection_id,is_automatic_change)
         self.A= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.B= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.C= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
@@ -257,7 +262,7 @@ class ExHebbianNetwork(NeuralNetwork):
             # if Hebbian or ExHebbian, update weight using modulated_sum
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid and self.connections[c].output_id == n):
-                    if(is_modulated == False):
+                    if(is_modulated == False and self.is_automatic_change == True):
                         self.connections[c].weight += \
                             self.epsiron * \
                             (
@@ -266,6 +271,8 @@ class ExHebbianNetwork(NeuralNetwork):
                                 self.neurons[ self.connections[c].input_id ].activation * self.C + \
                                 self.D
                             )
+                    elif(is_modulated == False and self.is_automatic_change == False):
+                        self.connections[c].weight += 0
                     elif(is_modulated == True):
                         self.connections[c].weight += \
                             modulated_sum * self.epsiron * \
