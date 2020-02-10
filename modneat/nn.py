@@ -262,7 +262,7 @@ class ExHebbianNetwork(NeuralNetwork):
             # if Hebbian or ExHebbian, update weight using modulated_sum
             for c in range(len(self.connections)):
                 if(self.connections[c].is_valid and self.connections[c].output_id == n):
-                    if(is_modulated == False):
+                    if(is_modulated == False and self.is_automacitc_change == True):
                         self.connections[c].weight += \
                             self.epsiron * \
                             (
@@ -271,6 +271,8 @@ class ExHebbianNetwork(NeuralNetwork):
                                 self.neurons[ self.connections[c].input_id ].activation * self.C + \
                                 self.D
                             )
+                    elif(is_modulated == False and self.is_automacitc_change == False):
+                        self.connections[c].weight += 0
                     elif(is_modulated == True):
                         self.connections[c].weight += \
                             modulated_sum * self.epsiron * \
