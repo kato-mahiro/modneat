@@ -22,13 +22,13 @@ class Agents(list):
             self,
             agent_type_string,
             agent_num,
-            is_automacitc_change = True
+            is_automatic_change = True
         ):
         super().__init__()
         self.agent_num = agent_num
         for i in range(self.agent_num):
             #self.append(NeuralNetwork(self.global_max_connection_id))
-            self.append(eval(agent_type_string)(self.global_max_connection_id, is_automacitc_change))
+            self.append(eval(agent_type_string)(self.global_max_connection_id, is_automatic_change))
 
     @property
     def global_max_connection_id(self):
