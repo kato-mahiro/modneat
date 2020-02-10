@@ -12,7 +12,9 @@ except:
     from neuron import *
 
 class NeuralNetwork:
-    def __init__(self,global_max_connection_id):
+    def __init__(self,global_max_connection_id,is_automacitc_change):
+        self.is_automacitc_change = is_automacitc_change
+
         # initialize neurons
         self.neurons = []
         for n in range(INPUT_NUM):
@@ -183,9 +185,6 @@ class NeuralNetwork:
         G.view(title)
         
 class HebbianNetwork(NeuralNetwork):
-    def __init__(self,global_max_connection_id = 0, is_automacitc_change = True):
-        super().__init__(global_max_connection_id)
-        self.is_automacitc_change = is_automacitc_change
 
     def get_output_with_update(self,input_vector):
         if(len(input_vector) != INPUT_NUM):
