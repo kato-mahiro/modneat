@@ -16,12 +16,14 @@ class NeuralNetwork:
                  global_max_connection_id,
                  is_automatic_change,
                  input_num,
-                 output_num
+                 output_num,
+                 normal_num_upper_limit
                 ):
 
         self.is_automatic_change = is_automatic_change
         self.input_num = input_num
         self.output_num = output_num
+        self.normal_num_upper_limit = normal_num_upper_limit
 
         # initialize neurons
         self.neurons = []
@@ -236,8 +238,8 @@ class HebbianNetwork(NeuralNetwork):
         return self.output_vector
 
 class ExHebbianNetwork(NeuralNetwork):
-    def __init__(self,global_max_connection_id,is_automatic_change,input_num,output_num):
-        super().__init__(global_max_connection_id,is_automatic_change,input_num,output_num)
+    def __init__(self,global_max_connection_id,is_automatic_change,input_num,output_num,normal_num_upper_limit):
+        super().__init__(global_max_connection_id,is_automatic_change,input_num,output_num,normal_num_upper_limit)
         self.A= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.B= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.C= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
