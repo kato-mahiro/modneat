@@ -123,7 +123,7 @@ def mutate_add_neuron(a, global_max_connection_id):
     target_output = agent.connections[target_no].output_id
 
     normal_allowance = agent.normal_num_upper_limit - agent.num_of_normal_neuron
-    modulation_allowance = MODULATION_NUM_UPPER_LIMIT - agent.num_of_modulation_neuron
+    modulation_allowance = agent.modulation_num_upper_limit - agent.num_of_modulation_neuron
     normal_allowance = 0 if normal_allowance < 0 else normal_allowance
     modulation_allowance = 0 if modulation_allowance < 0 else modulation_allowance
     if (normal_allowance == 0 and modulation_allowance == 0):
