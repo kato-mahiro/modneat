@@ -76,7 +76,7 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
 def mutate_add_connection(a, global_max_connection_id ):
     agent = copy.deepcopy(a)
     agent.reset()
-    if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
+    if(agent.num_of_active_connection >= agent.connection_num_upper_limit):
         return agent
     else:
         input_id = random.randint(0, len(agent.neurons) -1)
@@ -91,7 +91,7 @@ def mutate_disable_connection(a):
     """
     agent = copy.deepcopy(a)
     agent.reset()
-    if(agent.num_of_active_connection <= CONNECTION_NUM_LOWER_LIMIT):
+    if(agent.num_of_active_connection <= agent.connection_num_lower_limit):
         return agent
     else:
         while(True):
@@ -111,7 +111,7 @@ def mutate_add_neuron(a, global_max_connection_id):
     agent = copy.deepcopy(a)
     agent.reset()
 
-    if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
+    if(agent.num_of_active_connection >= agent.connection_num_upper_limit):
         return agent
     if(agent.num_of_normal_neuron + agent.num_of_modulation_neuron >= agent.neuron_num_upper_limit):
         return agent

@@ -21,7 +21,9 @@ class NeuralNetwork:
                  normal_num_lower_limit,
                  modulation_num_upper_limit,
                  modulation_num_lower_limit,
-                 neuron_num_upper_limit
+                 neuron_num_upper_limit,
+                 connection_num_upper_limit,
+                 connection_num_lower_limit
                 ):
 
         self.is_automatic_change = is_automatic_change
@@ -32,6 +34,8 @@ class NeuralNetwork:
         self.modulation_num_upper_limit = modulation_num_upper_limit
         self.modulation_num_lower_limit = modulation_num_lower_limit
         self.neuron_num_upper_limit = neuron_num_upper_limit
+        self.connection_num_upper_limit = connection_num_upper_limit
+        self.connection_num_lower_limit = connection_num_lower_limit
 
         # initialize neurons
         self.neurons = []
@@ -47,7 +51,7 @@ class NeuralNetwork:
         # initialize connections
         self.connections = []
         connection_id = global_max_connection_id +1
-        for n in range(CONNECTION_NUM_LOWER_LIMIT):
+        for n in range(self.connection_num_lower_limit):
             input_id = random.randint(0, len(self.neurons) -1)
             output_id = random.randint(self.input_num, len(self.neurons) -1)
             self.connections.append(Connetion(connection_id, input_id, output_id ))
@@ -246,8 +250,8 @@ class HebbianNetwork(NeuralNetwork):
         return self.output_vector
 
 class ExHebbianNetwork(NeuralNetwork):
-    def __init__(self,global_max_connection_id,is_automatic_change,input_num,output_num,normal_num_upper_limit,normal_num_lower_limit,modulation_num_upper_limit,modulation_num_lower_limit, neuron_num_upper_limit):
-        super().__init__(global_max_connection_id,is_automatic_change,input_num,output_num,normal_num_upper_limit,normal_num_lower_limit,modulation_num_upper_limit,modulation_num_lower_limit,neuron_num_upper_limit)
+    def __init__(self,global_max_connection_id,is_automatic_change,input_num,output_num,normal_num_upper_limit,normal_num_lower_limit,modulation_num_upper_limit,modulation_num_lower_limit, neuron_num_upper_limit,connection_num_upper_limit,connection_num_lower_limit):
+        super().__init__(global_max_connection_id,is_automatic_change,input_num,output_num,normal_num_upper_limit,normal_num_lower_limit,modulation_num_upper_limit,modulation_num_lower_limit,neuron_num_upper_limit,connection_num_upper_limit,connection_num_lower_limit)
         self.A= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.B= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.C= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
