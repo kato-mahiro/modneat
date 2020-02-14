@@ -22,7 +22,34 @@ class Agents(list):
             self,
             agent_type_string,
             agent_num,
-            is_automatic_change = True
+            is_automatic_change = True,
+
+            input_num = INPUT_NUM,
+            output_num = OUTPUT_NUM,
+
+            normal_num_upper_limit = NORMAL_NUM_UPPER_LIMIT,
+            normal_num_lower_limit = NORMAL_NUM_LOWER_LIMIT,
+
+            modulation_num_upper_limit = MODULATION_NUM_UPPER_LIMIT,
+            modulation_num_lower_limit = MODULATION_NUM_LOWER_LIMIT,
+
+            neuron_num_upper_limit = NEURON_NUM_UPPER_LIMIT,
+
+            connection_num_upper_limit = CONNECTION_NUM_UPPER_LIMIT,
+            connection_num_lower_limit = CONNECTION_NUM_LOWER_LIMIT,
+
+            weight_upper_limit = WEIGHT_UPPER_LIMIT,
+            weight_lower_limit = WEIGHT_LOWER_LIMIT,
+
+            bias_upper_limit = BIAS_UPPER_LIMIT,
+            bias_lower_limit = BIAS_LOWER_LIMIT,
+
+            evolution_param_upper_limit = EVOLUTION_PARAM_UPPER_LIMIT,
+            evolution_param_lower_limit = EVOLUTION_PARAM_LOWER_LIMIT,
+
+            epsiron_lower_limit = EPSIRON_LOWER_LIMIT,
+            epsiron_upper_limit = EPSIRON_UPPER_LIMIT
+
         ):
         super().__init__()
         self.agent_num = agent_num
