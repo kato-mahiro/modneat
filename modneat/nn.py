@@ -15,17 +15,19 @@ class NeuralNetwork:
     def __init__(self,
                  global_max_connection_id,
                  is_automatic_change,
-                 input_num
+                 input_num,
+                 output_num
                 ):
 
         self.is_automatic_change = is_automatic_change
         self.input_num = input_num
+        self.output_num = output_num
 
         # initialize neurons
         self.neurons = []
         for n in range(self.input_num):
             self.neurons.append(Neuron(NeuronType.INPUT))
-        for n in range(OUTPUT_NUM):
+        for n in range(self.output_num):
             self.neurons.append(Neuron(NeuronType.OUTPUT))
         for n in range(NORMAL_NUM_LOWER_LIMIT):
             self.neurons.append(Neuron(NeuronType.NORMAL))
@@ -48,7 +50,7 @@ class NeuralNetwork:
     @property
     def output_vector(self):
         output_vector = []
-        for n in range(self.input_num, self.input_num + OUTPUT_NUM):
+        for n in range(self.input_num, self.input_num + self.output_num):
             output_vector.append(self.neurons[n].activation)
         return output_vector
 
@@ -63,7 +65,7 @@ class NeuralNetwork:
     @property
     def num_of_normal_neuron(self):
         num = 0
-        for i in range( self.input_num + OUTPUT_NUM, len(self.neurons)):
+        for i in range( self.input_num + self.output_num, len(self.neurons)):
             if(self.neurons[i].neuron_type == NeuronType.NORMAL):
                 num += 1
         return num
@@ -71,7 +73,7 @@ class NeuralNetwork:
     @property
     def num_of_modulation_neuron(self):
         num = 0
-        for i in range( self.input_num + OUTPUT_NUM, len(self.neurons)):
+        for i in range( self.input_num + self.output_num, len(self.neurons)):
             if(self.neurons[i].neuron_type == NeuronType.MODULATION):
                 num += 1
         return num
@@ -234,8 +236,8 @@ class HebbianNetwork(NeuralNetwork):
         return self.output_vector
 
 class ExHebbianNetwork(NeuralNetwork):
-    def __init__(self,global_max_connection_id,is_automatic_change,input_num):
-        super().__init__(global_max_connection_id,is_automatic_change,input_num)
+    def __init__(self,global_max_connection_id,is_automatic_change,input_num,output_num):
+        super().__init__(global_max_connection_id,is_automatic_change,input_num,output_num)
         self.A= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.B= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.C= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
