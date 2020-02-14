@@ -76,11 +76,11 @@ def crossover(agent_A, fitness_A, agent_B, fitness_B):
 def mutate_add_connection(a, global_max_connection_id ):
     agent = copy.deepcopy(a)
     agent.reset()
-    if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
+    if(agent.num_of_active_connection >= agent.connection_num_upper_limit):
         return agent
     else:
         input_id = random.randint(0, len(agent.neurons) -1)
-        output_id = random.randint(INPUT_NUM, len(agent.neurons) -1)
+        output_id = random.randint(agent.input_num, len(agent.neurons) -1)
         connection_id = global_max_connection_id +1
         agent.connections.append(Connetion(connection_id, input_id, output_id ))
         return agent
@@ -91,7 +91,7 @@ def mutate_disable_connection(a):
     """
     agent = copy.deepcopy(a)
     agent.reset()
-    if(agent.num_of_active_connection <= CONNECTION_NUM_LOWER_LIMIT):
+    if(agent.num_of_active_connection <= agent.connection_num_lower_limit):
         return agent
     else:
         while(True):
@@ -111,9 +111,9 @@ def mutate_add_neuron(a, global_max_connection_id):
     agent = copy.deepcopy(a)
     agent.reset()
 
-    if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
+    if(agent.num_of_active_connection >= agent.connection_num_upper_limit):
         return agent
-    if(agent.num_of_normal_neuron + agent.num_of_modulation_neuron >= NEURON_NUM_UPPER_LIMIT):
+    if(agent.num_of_normal_neuron + agent.num_of_modulation_neuron >= agent.neuron_num_upper_limit):
         return agent
     if( len(agent.connections) == 0 ):
         return agent
@@ -122,8 +122,8 @@ def mutate_add_neuron(a, global_max_connection_id):
     target_input = agent.connections[target_no].input_id
     target_output = agent.connections[target_no].output_id
 
-    normal_allowance = NORMAL_NUM_UPPER_LIMIT - agent.num_of_normal_neuron
-    modulation_allowance = MODULATION_NUM_UPPER_LIMIT - agent.num_of_modulation_neuron
+    normal_allowance = agent.normal_num_upper_limit - agent.num_of_normal_neuron
+    modulation_allowance = agent.modulation_num_upper_limit - agent.num_of_modulation_neuron
     normal_allowance = 0 if normal_allowance < 0 else normal_allowance
     modulation_allowance = 0 if modulation_allowance < 0 else modulation_allowance
     if (normal_allowance == 0 and modulation_allowance == 0):
