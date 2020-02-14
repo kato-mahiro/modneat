@@ -113,7 +113,7 @@ def mutate_add_neuron(a, global_max_connection_id):
 
     if(agent.num_of_active_connection >= CONNECTION_NUM_UPPER_LIMIT):
         return agent
-    if(agent.num_of_normal_neuron + agent.num_of_modulation_neuron >= NEURON_NUM_UPPER_LIMIT):
+    if(agent.num_of_normal_neuron + agent.num_of_modulation_neuron >= agent.neuron_num_upper_limit):
         return agent
     if( len(agent.connections) == 0 ):
         return agent

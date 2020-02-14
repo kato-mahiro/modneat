@@ -55,7 +55,7 @@ class Agents(list):
         self.agent_num = agent_num
         for i in range(self.agent_num):
             #self.append(NeuralNetwork(self.global_max_connection_id))
-            self.append(eval(agent_type_string)(self.global_max_connection_id, is_automatic_change,input_num, output_num, normal_num_upper_limit,normal_num_lower_limit, modulation_num_upper_limit, modulation_num_lower_limit))
+            self.append(eval(agent_type_string)(self.global_max_connection_id, is_automatic_change,input_num, output_num, normal_num_upper_limit,normal_num_lower_limit, modulation_num_upper_limit, modulation_num_lower_limit, neuron_num_upper_limit))
 
     @property
     def global_max_connection_id(self):
