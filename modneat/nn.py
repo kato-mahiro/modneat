@@ -12,12 +12,18 @@ except:
     from neuron import *
 
 class NeuralNetwork:
-    def __init__(self,global_max_connection_id,is_automatic_change):
+    def __init__(self,
+                 global_max_connection_id,
+                 is_automatic_change,
+                 input_num
+                ):
+
         self.is_automatic_change = is_automatic_change
+        self.input_num = input_num
 
         # initialize neurons
         self.neurons = []
-        for n in range(INPUT_NUM):
+        for n in range(self.input_num):
             self.neurons.append(Neuron(NeuronType.INPUT))
         for n in range(OUTPUT_NUM):
             self.neurons.append(Neuron(NeuronType.OUTPUT))
@@ -31,7 +37,7 @@ class NeuralNetwork:
         connection_id = global_max_connection_id +1
         for n in range(CONNECTION_NUM_LOWER_LIMIT):
             input_id = random.randint(0, len(self.neurons) -1)
-            output_id = random.randint(INPUT_NUM, len(self.neurons) -1)
+            output_id = random.randint(self.input_num, len(self.neurons) -1)
             self.connections.append(Connetion(connection_id, input_id, output_id ))
             connection_id += 1
 
@@ -42,7 +48,7 @@ class NeuralNetwork:
     @property
     def output_vector(self):
         output_vector = []
-        for n in range(INPUT_NUM, INPUT_NUM + OUTPUT_NUM):
+        for n in range(self.input_num, self.input_num + OUTPUT_NUM):
             output_vector.append(self.neurons[n].activation)
         return output_vector
 
@@ -57,7 +63,7 @@ class NeuralNetwork:
     @property
     def num_of_normal_neuron(self):
         num = 0
-        for i in range( INPUT_NUM + OUTPUT_NUM, len(self.neurons)):
+        for i in range( self.input_num + OUTPUT_NUM, len(self.neurons)):
             if(self.neurons[i].neuron_type == NeuronType.NORMAL):
                 num += 1
         return num
@@ -65,7 +71,7 @@ class NeuralNetwork:
     @property
     def num_of_modulation_neuron(self):
         num = 0
-        for i in range( INPUT_NUM + OUTPUT_NUM, len(self.neurons)):
+        for i in range( self.input_num + OUTPUT_NUM, len(self.neurons)):
             if(self.neurons[i].neuron_type == NeuronType.MODULATION):
                 num += 1
         return num
@@ -89,15 +95,15 @@ class NeuralNetwork:
         self.fitness = 0.0
 
     def get_output_without_update(self,input_vector):
-        if(len(input_vector) != INPUT_NUM):
+        if(len(input_vector) != self.input_num):
             raise Exception('ERROR:num of input_vector is invalid')
 
         # Set input_vector
-        for n in range(INPUT_NUM):
+        for n in range(self.input_num):
             self.neurons[n].activation = input_vector[n]
 
 
-        for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
+        for n in range( len(self.neurons)-1, self.input_num-1, -1):
             activated_sum = 0
             modulated_sum = 0
             for c in range(len(self.connections)):
@@ -119,15 +125,15 @@ class NeuralNetwork:
         重みを更新しない
         出力値・修飾値は0に戻る
         """
-        if(len(input_vector) != INPUT_NUM):
+        if(len(input_vector) != self.input_num):
             raise Exception('ERROR:num of input_vector is invalid')
 
         # Set input_vector
-        for n in range(INPUT_NUM):
+        for n in range(self.input_num):
             self.neurons[n].activation = input_vector[n]
 
 
-        for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
+        for n in range( len(self.neurons)-1, self.input_num-1, -1):
             activated_sum = 0
             modulated_sum = 0
             for c in range(len(self.connections)):
@@ -187,14 +193,14 @@ class NeuralNetwork:
 class HebbianNetwork(NeuralNetwork):
 
     def get_output_with_update(self,input_vector):
-        if(len(input_vector) != INPUT_NUM):
+        if(len(input_vector) != self.input_num):
             raise Exception('ERROR:num of input_vector is invalid')
 
         # Set input_vector
-        for n in range(INPUT_NUM):
+        for n in range(self.input_num):
             self.neurons[n].activation = input_vector[n]
 
-        for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
+        for n in range( len(self.neurons)-1, self.input_num-1, -1):
             activated_sum = 0
             modulated_sum = 0
             is_modulated = False
@@ -228,22 +234,22 @@ class HebbianNetwork(NeuralNetwork):
         return self.output_vector
 
 class ExHebbianNetwork(NeuralNetwork):
-    def __init__(self,global_max_connection_id,is_automatic_change):
-        super().__init__(global_max_connection_id,is_automatic_change)
+    def __init__(self,global_max_connection_id,is_automatic_change,input_num):
+        super().__init__(global_max_connection_id,is_automatic_change,input_num)
         self.A= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.B= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.C= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
         self.D= random.uniform(EVOLUTION_PARAM_LOWER_LIMIT, EVOLUTION_PARAM_UPPER_LIMIT)
 
     def get_output_with_update(self,input_vector):
-        if(len(input_vector) != INPUT_NUM):
+        if(len(input_vector) != self.input_num):
             raise Exception('ERROR:num of input_vector is invalid')
 
         # Set input_vector
-        for n in range(INPUT_NUM):
+        for n in range(self.input_num):
             self.neurons[n].activation = input_vector[n]
 
-        for n in range( len(self.neurons)-1, INPUT_NUM-1, -1):
+        for n in range( len(self.neurons)-1, self.input_num-1, -1):
             activated_sum = 0
             modulated_sum = 0
             is_modulated = False
