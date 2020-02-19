@@ -100,6 +100,19 @@ def mutate_disable_connection(a):
                 agent.connections[n].is_valid = False
                 return agent
 
+def disable_specific_connection(a,no):
+    """
+    特定の番号の結合を選択して無効化する
+    """
+    agent = copy.deepcopy(a)
+    agent.reset()
+    n = no
+    if agent.connections[n].is_valid == True:
+        agent.connections[n].is_valid = False
+        return agent
+    else:
+        print('connection No ', no ,'is already disabled.')
+        return agent
 
 def mutate_add_neuron(a, global_max_connection_id):
     """
