@@ -82,7 +82,7 @@ class Agents(list):
         fitness_list = [ self[i].fitness for i in range(len(self)) ]
         return ( sum(fitness_list) / len(fitness_list) )
 
-    def get_distance(agent_A, agent_B, c1=1.0, c2=1.0, c3=1.0):
+    def get_distance(self, agent_A, agent_B, c1=1.0, c2=1.0, c3=1.0):
         "各エージェントのconnectionsにidの重複がないことを前提として実装"
         A = copy.deepcopy(agent_A)
         A.connections.sort(key=attrgetter('connection_id'))
@@ -115,7 +115,7 @@ class Agents(list):
         for i in range(len(a_connection_list)):
             if(a_connection_list[i].is_valid != b_connection_list[i].is_valid):
                 disjoint += 1
-            weight_differences += a_connection_list[i].weight - b_connection_list[i].weight
+            weight_differences += abs(a_connection_list[i].weight - b_connection_list[i].weight)
 
         if(len(a_connection_list)!=0):
             weight_differences /= len(a_connection_list)
