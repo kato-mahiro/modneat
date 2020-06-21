@@ -82,6 +82,57 @@ class Agents(list):
         fitness_list = [ self[i].fitness for i in range(len(self)) ]
         return ( sum(fitness_list) / len(fitness_list) )
 
+    def get_distance(agent_A, agent_B, c1=1.0, c2=1.0, c3=1.0):
+        "各エージェントのconnectionsにidの重複がないことを前提として実装"
+        A = copy.deepcopy(agent_A)
+        A.connections.sort(key=attrgetter('connection_id'))
+        B = copy.deepcopy(agent_B)
+        B.connections.sort(key=attrgetter('connection_id'))
+
+        a_id_list=[]
+        b_id_list=[]
+        for i in range(len(A.connections)):
+            a_id_list.append(A.connections[i].connection_id)
+        for i in range(len(B.connections)):
+            b_id_list.append(B.connections[i].connection_id)
+
+        union = set(a_id_list) & set(b_id_list)
+        excess = (len(a_id_list)-len(union)) + (len(b_id_list)-len(union))
+
+        # calculate disjoint and weight_differences
+        disjoint = 0
+        weight_differences = 0
+        a_connection_list=[]
+        b_connection_list=[]
+        for i in range(len(A.connections)):
+            if (A.connections[i].connection_id in union):
+                a_connection_list.append(A.connections[i])
+
+        for i in range(len(B.connections)):
+            if (B.connections[i].connection_id in union):
+                b_connection_list.append(B.connections[i])
+
+        for i in range(len(a_connection_list)):
+            if(a_connection_list[i].is_valid != b_connection_list[i].is_valid):
+                disjoint += 1
+            weight_differences += a_connection_list[i].weight - b_connection_list[i].weight
+
+        if(len(a_connection_list)!=0):
+            weight_differences /= len(a_connection_list)
+
+        larger = lambda a,b: a if a>b else b
+        larger_connection_num = larger(len(agent_A.connections), len(agent_B.connections))
+
+        distance = c1 * excess / larger_connection_num + c2 * disjoint / larger_connection_num + c3 * weight_differences
+
+        print('union:', union)
+        print('excess:', excess)
+        print('disjoint:', disjoint)
+        print('weight_differences:', weight_differences)
+        print('distance:', distance)
+
+        return distance
+
     def evolution(self, elite_num = 0, mutate_prob=0.01, sigma=0.1):
         self.sort(key=attrgetter('fitness'), reverse = True)
 
@@ -179,6 +230,7 @@ class Agents(list):
         f = open(name,'wb')
         pickle.dump(self,f)
         f.close
+
 
 def read_agents(name):
     f = open(name,'rb')
