@@ -29,8 +29,8 @@ from modneat import agents
 
 # create agents. give type and number of agents as argments.
 agents = agents.Agents('NeuralNetwork',100)
-agents = agents.Agents('HebbianNetwork',100)
-agents = agents.Agents('ExHebbianNetwork',100)
+agents = agents.Agents('HebbianNetwork',100,automatic_change=True)
+agents = agents.Agents('ExHebbianNetwork',100,automatic_change=False)
 
 # agents is list of agent.
 # In this case, agents[0]~agents[99] are each individual.
