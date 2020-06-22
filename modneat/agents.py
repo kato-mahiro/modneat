@@ -101,15 +101,27 @@ class Agents(list):
         return species_individuals
 
 
-    """
-    def assign_species_id(self, ):
+    def assign_species_id(self, threshold):
         #assign species id for agents which id is -1
         if(self.max_species_id == -1):
             self[0].species_id = 1
 
-        while( -1.in(species_set) ):
-            for species_set:
-    """
+        for ind in self:
+            if(ind.species_id == -1):
+                species_id_set = self.species_set
+                species_id_set.remove(-1)
+                species_id_set=sorted(species_id_set)
+                print(self.species_set, species_id_set)
+                print('id_list:',species_id_set)
+                for s in species_id_set:
+                    comparison_target = self.get_species_individuals(s)[0]
+                    if( self.get_distance(ind, comparison_target) < threshold):
+                        ind.species_id = s
+                        break
+                    if(s == max(species_id_set)):
+                        ind.species_id = max(species_id_set) +1
+
+
 
     def get_distance(self, agent_A, agent_B, c1=1.0, c2=1.0, c3=1.0):
         "各エージェントのconnectionsにidの重複がないことを前提として実装"
