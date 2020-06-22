@@ -87,6 +87,30 @@ class Agents(list):
         species_id_list = [ self[i].species_id for i in range(len(self)) ]
         return max(species_id_list)
 
+    @property
+    def species_set(self):
+        species_id_list = [ self[i].species_id for i in range(len(self)) ]
+        return( set(species_id_list) )
+
+    def get_species_individuals(self, species_id):
+        species_individuals = []
+        for i in self:
+            if(i.species_id == species_id):
+                species_individuals.append(copy.deepcopy(i))
+
+        return species_individuals
+
+
+    """
+    def assign_species_id(self, ):
+        #assign species id for agents which id is -1
+        if(self.max_species_id == -1):
+            self[0].species_id = 1
+
+        while( -1.in(species_set) ):
+            for species_set:
+    """
+
     def get_distance(self, agent_A, agent_B, c1=1.0, c2=1.0, c3=1.0):
         "各エージェントのconnectionsにidの重複がないことを前提として実装"
         A = copy.deepcopy(agent_A)
@@ -105,6 +129,8 @@ class Agents(list):
         excess = (len(a_id_list)-len(union)) + (len(b_id_list)-len(union))
 
         # calculate disjoint and weight_differences
+
+        # ToDo: weight -> initial_weight
         disjoint = 0
         weight_differences = 0
         a_connection_list=[]
