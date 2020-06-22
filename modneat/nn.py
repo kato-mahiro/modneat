@@ -61,6 +61,8 @@ class NeuralNetwork:
 
         self.fitness = 0.0
 
+        self.species_id = -1
+
     @property
     def output_vector(self):
         output_vector = []

@@ -82,6 +82,11 @@ class Agents(list):
         fitness_list = [ self[i].fitness for i in range(len(self)) ]
         return ( sum(fitness_list) / len(fitness_list) )
 
+    @property
+    def max_species_id(self):
+        species_id_list = [ self[i].species_id for i in range(len(self)) ]
+        return max(species_id_list)
+
     def get_distance(self, agent_A, agent_B, c1=1.0, c2=1.0, c3=1.0):
         "各エージェントのconnectionsにidの重複がないことを前提として実装"
         A = copy.deepcopy(agent_A)
