@@ -92,6 +92,7 @@ class Agents(list):
         species_id_list = [ self[i].species_id for i in range(len(self)) ]
         return( set(species_id_list) )
 
+
     def get_species_individuals(self, species_id):
         species_individuals = []
         for i in self:

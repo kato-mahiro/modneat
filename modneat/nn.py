@@ -61,7 +61,7 @@ class NeuralNetwork:
 
         self.fitness = 0.0
 
-        self.species_id = -1
+        self.species_id = -1 #not_assigned
 
     @property
     def output_vector(self):
