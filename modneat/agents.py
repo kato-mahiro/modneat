@@ -62,6 +62,7 @@ class Agents(list):
         for i in range(initial_species_no, self.agent_num):
             self[i] = copy.deepcopy(self[ i% initial_species_no ])
 
+        self.species_data_dict = {} #{species_id: {pre_fitness, fitness, stagnation_step, niche} }
 
     @property
     def global_max_connection_id(self):
@@ -149,7 +150,7 @@ class Agents(list):
 
         # calculate disjoint and weight_differences
 
-        # ToDo: weight -> initial_weight
+        # TODO: weight -> initial_weight
         disjoint = 0
         weight_differences = 0
         a_connection_list=[]
@@ -182,6 +183,76 @@ class Agents(list):
         print('distance:', distance)
 
         return distance
+
+    def evolution_with_speciation(self, mutate_prob=0.01, sigma=0.1, stagnation_theshold = 0.05, stagnation_step_theshold = 50):
+
+        # pre_fitness に fitness を代入する
+        for d in self.species_data_dict:
+            print(self.species_data_dict[d])
+            self.species_data_dict[d]['pre_fitness'] = self.species_data_dict[d]['fitness']
+
+        # 各種の平均適応度(fitness)を求めて代入する 新種の情報の初期化も行う
+        for s in self.species_set:
+            if not (s in self.species_data_dict):
+                self.species_data_dict[s] = {'pre_fitness':0, 'fitness':0, 'stagnation_step':0, 'niche':0 }
+            target_individuals = self.get_species_individuals(s)
+            fitness_list = [ target_individuals[i].fitness for i in range(len(target_individuals)) ]
+            self.species_data_dict[s]['fitness'] = sum(fitness_list) / len(fitness_list)
+
+        # pre_fitnessとfitnessを比較し，向上していなければ停滞ステップに1加算する
+        for s in self.species_set:
+            if(self.species_data_dict[s]['fitness'] - self.species_data_dict[s]['pre_fitness'] <= stagnation_theshold):
+                self.species_data_dict[s]['stagnation_step'] += 1
+            else:
+                self.species_data_dict[s]['stagnation_step'] = 0
+
+        # 一定ステップ以上適応度が停滞した種を削除する
+        #XXX: すべての種が同時に削除される可能性がある
+        for d in self.species_data_dict:
+            if(self.species_data_dict[d]['stagnation_step'] >= stagnation_step_theshold;
+                del self.species_data_dict[d]
+
+        # 各種のニッチを求める
+        #NOTE: ニッチの合計が self.agent_num をオーバするかもしれない
+        species_fitness_sum = 0
+        for d in self.species_data_dict:
+            species_fitness_sum += self.species_data_dict['fitness']
+        for d in self.species_data_dict:
+            self.species_data_dict[d]['niche'] = int(self.agent_num * ( self.species_data_dict[d]['fitness'] / species_fitness_sum ))
+            if(self.species_data_dict[d]['niche'] ==0:
+                self.species_data_dict[d]['niche'] = 1
+
+        self.sort(key=attrgetter('fitness'), reverse = True)
+        fitness_list = [ self[i].fitness for i in range(len(self)) ]
+
+        min_fitness = min(fitness_list)
+        max_fitness = max(fitness_list)
+        range_fitness = max_fitness - min_fitness +0.001
+
+        fitness_list = [(fitness_list[i] - min_fitness)/range_fitness +0.001 for i in range(len(fitness_list))]
+
+        #next_agents = Agents(copy.deepcopy(self[0:elite_num]))
+        next_agents = copy.deepcopy(self)
+        next_agents.clear()
+        for i in range(elite_num):
+            self[i].reset()
+            next_agents.append(self[i])
+
+        # evolution
+        for i in range(self.agent_num - elite_num):
+            larger = lambda a,b: a if a>b else b
+            parent_A = random.choices(self, weights=fitness_list)[0]
+            parent_B = random.choices(self, weights=fitness_list)[0]
+            new_agent = crossover(parent_A, parent_A.fitness, parent_B, parent_B.fitness)
+            new_agent = mutate_add_connection(new_agent,larger(self.global_max_connection_id,next_agents.global_max_connection_id)) if random.random() < mutate_prob else new_agent
+            new_agent = mutate_disable_connection(new_agent) if random.random() < mutate_prob else new_agent
+            new_agent = mutate_add_neuron(new_agent, larger(self.global_max_connection_id, next_agents.global_max_connection_id)) if random.random() < mutate_prob else new_agent
+            new_agent = give_dispersion(new_agent, rate=mutate_prob, sigma=sigma)
+            next_agents.append(new_agent)
+
+        #引数で返すようにしないとなぜか内容が更新されない
+        return next_agents
+
 
     def evolution(self, elite_num = 0, mutate_prob=0.01, sigma=0.1):
         self.sort(key=attrgetter('fitness'), reverse = True)
