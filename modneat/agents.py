@@ -22,8 +22,9 @@ class Agents(list):
             self,
             agent_type_string,
             agent_num,
-            initial_species_no,
             is_automatic_change = True,
+
+            initial_species_no = 4,
 
             input_num = INPUT_NUM,
             output_num = OUTPUT_NUM,
@@ -99,6 +100,9 @@ class Agents(list):
         species_id_list = [ self[i].species_id for i in range(len(self)) ]
         return( set(species_id_list) )
 
+    @property
+    def species_num(self):
+        return(len(self.species_set))
 
     def get_species_individuals(self, species_id):
         species_individuals = []
@@ -119,8 +123,8 @@ class Agents(list):
                 species_id_set = self.species_set
                 species_id_set.remove(-1)
                 species_id_set=sorted(species_id_set)
-                print(self.species_set, species_id_set)
-                print('id_list:',species_id_set)
+                #print(self.species_set, species_id_set)
+                #print('id_list:',species_id_set)
                 for s in species_id_set:
                     comparison_target = self.get_species_individuals(s)[0]
                     if( self.get_distance(ind, comparison_target) < threshold):
@@ -128,8 +132,6 @@ class Agents(list):
                         break
                     if(s == max(species_id_set)):
                         ind.species_id = max(species_id_set) +1
-
-
 
     def get_distance(self, agent_A, agent_B, c1=1.0, c2=1.0, c3=1.0):
         "各エージェントのconnectionsにidの重複がないことを前提として実装"
@@ -176,20 +178,30 @@ class Agents(list):
 
         distance = c1 * excess / larger_connection_num + c2 * disjoint / larger_connection_num + c3 * weight_differences
 
-        print('union:', union)
-        print('excess:', excess)
-        print('disjoint:', disjoint)
-        print('weight_differences:', weight_differences)
-        print('distance:', distance)
+        #print('union:', union)
+        #print('excess:', excess)
+        #print('disjoint:', disjoint)
+        #print('weight_differences:', weight_differences)
+        #print('distance:', distance)
 
         return distance
 
-    def evolution_with_speciation(self, mutate_prob=0.01, sigma=0.1, stagnation_theshold = 0.05, stagnation_step_theshold = 50):
+    def show_each_representatives(self):
+        for key in list(self.species_data_dict):
+            print(key)
+            agents = self.get_species_individuals(key)
+            agents[0].show_network()
+            hoge=input()
+
+    def evolution_with_speciation(self, mutate_prob=0.01, sigma=0.1, stagnation_theshold = 0.05, stagnation_step_theshold = 50, r = 0.3):
+
+        self.assign_species_id(1.0)
 
         # pre_fitness に fitness を代入する
         for d in self.species_data_dict:
-            print(self.species_data_dict[d])
+            #print(self.species_data_dict[d])
             self.species_data_dict[d]['pre_fitness'] = self.species_data_dict[d]['fitness']
+
 
         # 各種の平均適応度(fitness)を求めて代入する 新種の情報の初期化も行う
         for s in self.species_set:
@@ -198,6 +210,7 @@ class Agents(list):
             target_individuals = self.get_species_individuals(s)
             fitness_list = [ target_individuals[i].fitness for i in range(len(target_individuals)) ]
             self.species_data_dict[s]['fitness'] = sum(fitness_list) / len(fitness_list)
+            #print('種',s,'の適応度:',self.species_data_dict[s]['fitness'])
 
         # pre_fitnessとfitnessを比較し，向上していなければ停滞ステップに1加算する
         for s in self.species_set:
@@ -208,47 +221,48 @@ class Agents(list):
 
         # 一定ステップ以上適応度が停滞した種を削除する
         #XXX: すべての種が同時に削除される可能性がある
-        for d in self.species_data_dict:
-            if(self.species_data_dict[d]['stagnation_step'] >= stagnation_step_theshold;
-                del self.species_data_dict[d]
+        #for d in self.species_data_dict:
+        for key in list(self.species_data_dict):
+            if(self.species_data_dict[key]['stagnation_step'] >= stagnation_step_theshold):
+                print('種',key,'を絶滅させます')
+                del self.species_data_dict[key]
 
         # 各種のニッチを求める
         #NOTE: ニッチの合計が self.agent_num をオーバするかもしれない
         species_fitness_sum = 0
         for d in self.species_data_dict:
-            species_fitness_sum += self.species_data_dict['fitness']
+            species_fitness_sum += self.species_data_dict[d]['fitness']
         for d in self.species_data_dict:
             self.species_data_dict[d]['niche'] = int(self.agent_num * ( self.species_data_dict[d]['fitness'] / species_fitness_sum ))
-            if(self.species_data_dict[d]['niche'] ==0:
+            if(self.species_data_dict[d]['niche'] ==0):
                 self.species_data_dict[d]['niche'] = 1
+            #print('種',d, 'のニッチは:', self.species_data_dict[d]['niche'])
 
-        self.sort(key=attrgetter('fitness'), reverse = True)
-        fitness_list = [ self[i].fitness for i in range(len(self)) ]
-
-        min_fitness = min(fitness_list)
-        max_fitness = max(fitness_list)
-        range_fitness = max_fitness - min_fitness +0.001
-
-        fitness_list = [(fitness_list[i] - min_fitness)/range_fitness +0.001 for i in range(len(fitness_list))]
-
-        #next_agents = Agents(copy.deepcopy(self[0:elite_num]))
+        # 各種の上位の個体を交配させ，ニッチの数だけ子を生成する
         next_agents = copy.deepcopy(self)
         next_agents.clear()
-        for i in range(elite_num):
-            self[i].reset()
-            next_agents.append(self[i])
+        for d in self.species_data_dict:
+            agents = self.get_species_individuals(d)
+            agents.sort(key=attrgetter('fitness'), reverse = True)
+            elite = copy.deepcopy(agents[0])
+            elite.reset()
+            next_agents.append(elite)
+            num = int( len(agents) * r )
+            num = num+1 if num == 0 else num
+            good_agents = agents[:num]
 
-        # evolution
-        for i in range(self.agent_num - elite_num):
-            larger = lambda a,b: a if a>b else b
-            parent_A = random.choices(self, weights=fitness_list)[0]
-            parent_B = random.choices(self, weights=fitness_list)[0]
-            new_agent = crossover(parent_A, parent_A.fitness, parent_B, parent_B.fitness)
-            new_agent = mutate_add_connection(new_agent,larger(self.global_max_connection_id,next_agents.global_max_connection_id)) if random.random() < mutate_prob else new_agent
-            new_agent = mutate_disable_connection(new_agent) if random.random() < mutate_prob else new_agent
-            new_agent = mutate_add_neuron(new_agent, larger(self.global_max_connection_id, next_agents.global_max_connection_id)) if random.random() < mutate_prob else new_agent
-            new_agent = give_dispersion(new_agent, rate=mutate_prob, sigma=sigma)
-            next_agents.append(new_agent)
+            for i in range( self.species_data_dict[d]['niche'] -1):
+                larger = lambda a,b: a if a>b else b
+                parent_A = random.choice(good_agents)
+                parent_B = random.choice(good_agents)
+                new_agent = crossover(parent_A, parent_A.fitness, parent_B, parent_B.fitness)
+                new_agent = mutate_add_connection(new_agent,larger(self.global_max_connection_id,next_agents.global_max_connection_id)) if random.random() < mutate_prob else new_agent
+                new_agent = mutate_disable_connection(new_agent) if random.random() < mutate_prob else new_agent
+                new_agent = mutate_add_neuron(new_agent, larger(self.global_max_connection_id, next_agents.global_max_connection_id)) if random.random() < mutate_prob else new_agent
+                new_agent = give_dispersion(new_agent, rate=mutate_prob, sigma=sigma)
+                new_agent.species_id = -1
+                next_agents.append(new_agent)
+
 
         #引数で返すようにしないとなぜか内容が更新されない
         return next_agents
